@@ -9,7 +9,7 @@ RUN mvn -B -DskipTests package
 FROM eclipse-temurin:21-jre
 WORKDIR /app
 RUN useradd --system --create-home appuser
-COPY --from=build /workspace/target/artifact-alley-0.0.1-SNAPSHOT.jar /app/app.jar
+COPY --from=build /workspace/target/artifact-alley-0.0.1-SNAPSHOT.war /app/app.war
 USER appuser
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+ENTRYPOINT ["java", "-jar", "/app/app.war"]

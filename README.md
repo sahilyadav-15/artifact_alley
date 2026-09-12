@@ -37,7 +37,7 @@ The application creates this initial administrator only when it is absent. It pe
 
 This repository is ready for a Docker-based Render web service; deployment and account creation remain manual.
 
-The Docker image runs the packaged Spring Boot JAR directly. JSP views are packaged beneath `META-INF/resources/WEB-INF/jsp` so they remain available to the embedded Tomcat runtime; no external Tomcat is required.
+The Docker image runs a packaged Spring Boot executable WAR directly. JSP views stay in the conventional `src/main/webapp/WEB-INF/jsp` layout and are served by embedded Tomcat; no external Tomcat is required.
 
 1. Create a Neon PostgreSQL database and copy its connection details.
 2. Create a Render **Web Service** from this repository. Select the Docker runtime; Render builds from the included [Dockerfile](Dockerfile). No separate build or start command is needed.
