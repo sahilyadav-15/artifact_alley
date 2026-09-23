@@ -1,0 +1,437 @@
+{
+  "info": {
+    "name": "Artifact Alley API v1",
+    "description": "JSON and XML examples for the HttpSession-based Artifact Alley API. Obtain a CSRF token before login, refresh it after login, and let Postman retain JSESSIONID in its cookie jar.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "artifactId",
+      "value": "1"
+    },
+    {
+      "key": "sellerArtifactId",
+      "value": "1"
+    },
+    {
+      "key": "email",
+      "value": ""
+    },
+    {
+      "key": "password",
+      "value": ""
+    },
+    {
+      "key": "csrfToken",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Public",
+      "item": [
+        {
+          "name": "Artifact discovery - JSON",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/artifacts?q=coin&category=COIN&minPrice=100&maxPrice=10000&endingWithin=7d&sort=ending-soon&page=1&size=12"
+          }
+        },
+        {
+          "name": "Artifact list - XML",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/xml"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/artifacts"
+          }
+        },
+        {
+          "name": "Artifact details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/artifacts/{{artifactId}}"
+          }
+        },
+        {
+          "name": "Bid history",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/artifacts/{{artifactId}}/bids"
+          }
+        },
+        {
+          "name": "Liveness health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/actuator/health/liveness"
+          }
+        },
+        {
+          "name": "Readiness health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/actuator/health/readiness"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Session",
+      "description": "Choose bidder, seller or administrator credentials through the variables, then run Login. Postman retains the Set-Cookie response automatically.",
+      "item": [
+        {
+          "name": "Obtain CSRF token before login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const body = pm.response.json();",
+                  "pm.collectionVariables.set(\"csrfToken\", body.token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/session/csrf"
+          }
+        },
+        {
+          "name": "Login and capture session cookie",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "email",
+                  "value": "{{email}}"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password}}"
+                },
+                {
+                  "key": "_csrf",
+                  "value": "{{csrfToken}}"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/login"
+          }
+        },
+        {
+          "name": "Refresh CSRF token after login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const body = pm.response.json();",
+                  "pm.collectionVariables.set(\"csrfToken\", body.token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/session/csrf"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Bidder",
+      "item": [
+        {
+          "name": "Valid bid",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-CSRF-Token",
+                "value": "{{csrfToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 1500.00\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/artifacts/{{artifactId}}/bids"
+          }
+        },
+        {
+          "name": "Invalid bid - XML",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/xml"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/xml"
+              },
+              {
+                "key": "X-CSRF-Token",
+                "value": "{{csrfToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<BidRequest><amount>0</amount></BidRequest>"
+            },
+            "url": "{{baseUrl}}/api/v1/artifacts/{{artifactId}}/bids"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Seller",
+      "item": [
+        {
+          "name": "Seller artifact list",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/seller/artifacts"
+          }
+        },
+        {
+          "name": "Seller submission",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-CSRF-Token",
+                "value": "{{csrfToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Postman antique coin\",\n  \"category\": \"COIN\",\n  \"era\": \"1900s\",\n  \"startingPrice\": 1000.00,\n  \"closesAt\": \"2030-12-31T18:00:00\",\n  \"description\": \"Credential-free Postman collection example.\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/seller/artifacts"
+          }
+        },
+        {
+          "name": "Seller update",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-CSRF-Token",
+                "value": "{{csrfToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated antique coin\",\n  \"category\": \"COIN\",\n  \"era\": \"1900s\",\n  \"startingPrice\": 1100.00,\n  \"closesAt\": \"2030-12-31T18:00:00\",\n  \"description\": \"Updated through the seller REST API.\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/seller/artifacts/{{sellerArtifactId}}"
+          }
+        },
+        {
+          "name": "Seller resubmit",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-CSRF-Token",
+                "value": "{{csrfToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/seller/artifacts/{{sellerArtifactId}}/resubmit"
+          }
+        },
+        {
+          "name": "Seller withdrawal",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-CSRF-Token",
+                "value": "{{csrfToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/seller/artifacts/{{sellerArtifactId}}/withdraw"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Administrator",
+      "item": [
+        {
+          "name": "Pending list",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/admin/artifacts/pending"
+          }
+        },
+        {
+          "name": "Approve artifact",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-CSRF-Token",
+                "value": "{{csrfToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/admin/artifacts/{{sellerArtifactId}}/approve"
+          }
+        },
+        {
+          "name": "Reject artifact",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-CSRF-Token",
+                "value": "{{csrfToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"Please add clearer provenance details.\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/admin/artifacts/{{sellerArtifactId}}/reject"
+          }
+        },
+        {
+          "name": "Spring JDBC auction report",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/admin/reports/auction-summary?limit=5"
+          }
+        },
+        {
+          "name": "Direct JDBC activity report",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/admin/reports/artifact-activity?from=2020-01-01T00:00:00&to=2035-01-01T00:00:00"
+          }
+        }
+      ]
+    }
+  ]
+}

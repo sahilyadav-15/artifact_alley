@@ -31,7 +31,10 @@ public class ArtifactManagementController {
     public String dashboard(Model model, HttpSession session, RedirectAttributes redirect) {
         if (!hasRole(session, Role.SELLER, redirect)) return accessRedirect(session);
         List<Artifact> artifacts = sellerService.findOwned(signedInUser(session).getId());
+        Map<Long, Long> bidCounts = new LinkedHashMap<>();
+        artifacts.forEach(artifact -> bidCounts.put(artifact.getId(), sellerService.bidCountForOwned(artifact.getId(), signedInUser(session).getId())));
         model.addAttribute("artifacts", artifacts); model.addAttribute("coverImageUrls", coverUrls(artifacts));
+        model.addAttribute("bidCounts", bidCounts);
         return "seller-artifacts";
     }
 

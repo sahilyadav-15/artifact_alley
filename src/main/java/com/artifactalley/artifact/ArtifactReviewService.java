@@ -3,6 +3,8 @@ package com.artifactalley.artifact;
 import com.artifactalley.user.Role;
 import com.artifactalley.user.User;
 import com.artifactalley.user.UserRepository;
+import com.artifactalley.security.SecurityAuditService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +17,8 @@ public class ArtifactReviewService {
     private final ArtifactRepository artifacts;
     private final UserRepository users;
     private final Clock clock;
+    @Autowired(required = false)
+    private SecurityAuditService audit;
 
     public ArtifactReviewService(ArtifactRepository artifacts, UserRepository users, Clock clock) {
         this.artifacts = artifacts; this.users = users; this.clock = clock;
@@ -34,12 +38,14 @@ public class ArtifactReviewService {
         Artifact artifact = pendingLocked(id);
         validateListing(artifact);
         artifact.approve(administrator(administratorId), LocalDateTime.now(clock));
+        if (audit != null) audit.record("ARTIFACT_APPROVED", administratorId, id, "success");
     }
 
     @Transactional
     public void reject(Long id, Long administratorId, String reason) {
         Artifact artifact = pendingLocked(id);
         artifact.reject(administrator(administratorId), reason, LocalDateTime.now(clock));
+        if (audit != null) audit.record("ARTIFACT_REJECTED", administratorId, id, "success");
     }
 
     private Artifact pendingLocked(Long id) {

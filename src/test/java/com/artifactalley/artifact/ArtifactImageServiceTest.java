@@ -84,6 +84,8 @@ class ArtifactImageServiceTest {
                 List.of(file("fake.png", "image/png", "not an image".getBytes()))));
         assertThrows(ArtifactOperationException.class, () -> service.upload(10L, 1L,
                 List.of(file("photo.gif", "image/gif", image("png")))));
+        assertThrows(ArtifactOperationException.class, () -> service.upload(10L, 1L,
+                List.of(file("disguised.png", "image/png", image("gif")))));
         verify(storage, never()).store(any(), anyString(), anyString());
     }
 
@@ -110,6 +112,18 @@ class ArtifactImageServiceTest {
         assertThrows(ArtifactOperationException.class, () -> service.upload(10L, 99L,
                 List.of(file("photo.png", "image/png", image("png")))));
         verify(storage, never()).store(any(), anyString(), anyString());
+    }
+
+    @Test
+    void databaseFailureCleansStoredFileOnRollback() throws Exception {
+        when(images.countByArtifactId(10L)).thenReturn(0L);
+        doThrow(new RuntimeException("database failed")).when(images).flush();
+        assertThrows(RuntimeException.class, () -> service.upload(10L, 1L,
+                List.of(file("photo.png", "image/png", image("png")))));
+        TransactionSynchronizationUtils.triggerAfterCompletion(TransactionSynchronization.STATUS_ROLLED_BACK);
+        verify(storage).delete("00000000-0000-0000-0000-000000000001.png");
+        TransactionSynchronizationManager.clearSynchronization();
+        TransactionSynchronizationManager.initSynchronization();
     }
 
     @Test

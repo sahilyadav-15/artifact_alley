@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+      - name: Test and package executable WAR
+        run: mvn --batch-mode --no-transfer-progress clean test package
+      - name: Validate committed JSON
+        run: python -m json.tool docs/postman/Artifact-Alley-v1.postman_collection.json >/dev/null && python -m json.tool docs/postman/Artifact-Alley-local.postman_environment.json >/dev/null
+      - name: Check packaged JSPs and migrations
+        run: jar tf target/artifact-alley-0.0.1-SNAPSHOT.war | grep -q 'WEB-INF/jsp/home.jsp' && jar tf target/artifact-alley-0.0.1-SNAPSHOT.war | grep -q 'db/migration/V1__baseline_schema.sql'
+      - name: Build production container
+        run: docker build --tag artifact-alley:${{ github.sha }} .
+      - uses: actions/upload-artifact@v4
+        with:
+          name: artifact-alley-war
+          path: target/artifact-alley-0.0.1-SNAPSHOT.war
+          if-no-files-found: error
+          retention-days: 7

@@ -21,6 +21,7 @@
                         password with at least 6 characters.</div>
                     <form:form method="post" modelAttribute="registrationForm" class="mt-4" id="registration-form"
                         novalidate="true">
+                        <input type="hidden" name="_csrf" value="${csrfToken}">
                         <form:errors path="*" cssClass="alert alert-danger d-block" element="div" />
                         <fieldset class="mb-4 role-fieldset">
                             <legend class="visually-hidden">Choose account type</legend>
@@ -80,7 +81,7 @@
                     <p class="text-center text-muted mt-4 mb-0">Already registered? <a href="/login">Sign in</a>.</p>
                 </div>
             </main>
-            <script>
+            <script nonce="${cspNonce}">
                 (() => {
                     const selector = document.getElementById('role-selector');
                     const helper = document.getElementById('registration-helper');

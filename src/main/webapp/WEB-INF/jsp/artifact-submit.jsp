@@ -24,6 +24,7 @@
                         <p class="text-muted">Your listing remains private until an administrator approves it.</p>
                         <form:form method="post" action="/seller/artifacts" modelAttribute="artifactSubmissionForm"
                             class="mt-4" novalidate="true" enctype="multipart/form-data">
+                            <input type="hidden" name="_csrf" value="${csrfToken}">
                             <form:errors path="*" cssClass="alert alert-danger d-block" element="div" />
                             <div class="mb-3">
                                 <form:label path="title" cssClass="form-label">Title</form:label>
@@ -35,7 +36,7 @@
                                 <form:select path="category" cssClass="form-select">
                                     <form:option value="" label="Choose a category" />
                                     <c:forEach items="${categories}" var="category">
-                                        <form:option value="${category}">${category}</form:option>
+                                        <form:option value="${category}"><c:out value="${category}" /></form:option>
                                     </c:forEach>
                                 </form:select>
                                 <form:errors path="category" cssClass="invalid-feedback d-block" />

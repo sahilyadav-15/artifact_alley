@@ -21,6 +21,7 @@
                     <p class="eyebrow text-dark">ACCOUNT SECURITY</p>
                     <h1>Change password</h1>
                     <form:form method="post" modelAttribute="changePasswordForm" class="mt-4" novalidate="true">
+                        <input type="hidden" name="_csrf" value="${csrfToken}">
                         <form:errors path="*" cssClass="alert alert-danger d-block" element="div" />
                         <div class="mb-3">
                             <form:label path="currentPassword" cssClass="form-label">Current password</form:label>

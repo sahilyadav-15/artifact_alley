@@ -40,6 +40,8 @@ class ArtifactServiceTest {
 
     @Test
     void sellerSubmissionIsPendingAndDoesNotBecomeLiveUntilApproved() {
+        when(clock.instant()).thenReturn(Instant.parse("2026-09-23T08:00:00Z"));
+        when(clock.getZone()).thenReturn(ZoneOffset.UTC);
         when(artifactRepository.save(any(Artifact.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         Artifact submitted = artifactService.submit("Bidriware Vase", Category.OTHER, "19th century",

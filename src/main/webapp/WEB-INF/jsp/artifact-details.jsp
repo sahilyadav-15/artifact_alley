@@ -21,11 +21,11 @@
                 <c:when test="${not empty sessionScope.signedInUser}">
                     <span class="navbar-text"><c:out value="${sessionScope.signedInUser.name}" />
                         <small>(<c:out value="${sessionScope.signedInUser.role}" />)</small></span>
-                    <c:if test="${sessionScope.signedInUser.role == 'BIDDER'}"><a class="btn btn-outline-light btn-sm" href="/account/bids">My bids</a><form action="/account/become-seller" method="post" class="m-0"><button class="btn btn-accent btn-sm" type="submit">Become a seller</button></form></c:if>
+                    <c:if test="${sessionScope.signedInUser.role == 'BIDDER'}"><a class="btn btn-outline-light btn-sm" href="/account/bids">My bids</a><form action="/account/become-seller" method="post" class="m-0"><input type="hidden" name="_csrf" value="${csrfToken}"><button class="btn btn-accent btn-sm" type="submit">Become a seller</button></form></c:if>
                     <c:if test="${sessionScope.signedInUser.role == 'SELLER'}"><a class="btn btn-accent btn-sm" href="/seller/artifacts/new">Submit artifact</a></c:if>
                     <c:if test="${sessionScope.signedInUser.role == 'ADMIN'}"><a class="btn btn-accent btn-sm" href="/admin/artifacts/pending">Pending approvals</a></c:if>
                     <a class="btn btn-outline-light btn-sm" href="/account/password">Change password</a>
-                    <form action="/logout" method="post" class="m-0" id="logout-form"><button class="btn btn-outline-light btn-sm" type="button" id="logout-trigger">Log out</button></form>
+                    <form action="/logout" method="post" class="m-0" id="logout-form"><input type="hidden" name="_csrf" value="${csrfToken}"><button class="btn btn-outline-light btn-sm" type="button" id="logout-trigger">Log out</button></form>
                 </c:when>
                 <c:otherwise>
                     <a class="btn btn-outline-light btn-sm" href="/login">Sign in</a>
@@ -81,6 +81,7 @@
                     <c:when test="${canBid}">
                         <p class="description">Enter ₹<c:out value="${details.minimumNextBid}" /> or more. The latest price is checked again when you submit.</p>
                         <form:form method="post" action="/artifacts/${details.artifact.id}/bids" modelAttribute="bidForm" novalidate="true">
+                            <input type="hidden" name="_csrf" value="${csrfToken}">
                             <form:label path="amount" cssClass="form-label">Your bid amount (₹)</form:label>
                             <form:input path="amount" type="number" cssClass="form-control" min="0.01" step="0.01" inputmode="decimal" />
                             <form:errors path="amount" cssClass="invalid-feedback d-block" />
@@ -108,7 +109,7 @@
         </c:choose>
     </section>
 </main>
-<script>
+<script nonce="${cspNonce}">
     (() => {
         const trigger = document.getElementById('logout-trigger');
         if (!trigger) return;

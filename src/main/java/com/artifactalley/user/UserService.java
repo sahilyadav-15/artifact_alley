@@ -20,6 +20,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final String initialAdminPassword;
     private final SecureRandom secureRandom = new SecureRandom();
+    @Value("${spring.profiles.active:}")
+    private String activeProfiles;
 
     public UserService(UserRepository userRepository,
                        @Value("${artifactalley.initial-admin-password}") String initialAdminPassword) {
@@ -47,7 +49,13 @@ public class UserService {
     /** Creates the initial administrator only when absent; it never replaces an existing password. */
     public void ensureInitialAdmin() {
         String email = "admin@artifact.com";
-        if (userRepository.findByEmailIgnoreCase(email).isEmpty()) {
+        if (!userRepository.existsByRole(Role.ADMIN)) {
+            String lowered = initialAdminPassword.toLowerCase(java.util.Locale.ROOT);
+            if (activeProfiles != null && activeProfiles.contains("prod")
+                    && (initialAdminPassword.length() < 12 || "123456".equals(initialAdminPassword)
+                    || lowered.contains("password") || lowered.contains("admin"))) {
+                throw new IllegalStateException("INITIAL_ADMIN_PASSWORD must be a non-default value in production.");
+            }
             userRepository.save(new User("Administrator", email, hashPassword(initialAdminPassword), Role.ADMIN));
         }
     }

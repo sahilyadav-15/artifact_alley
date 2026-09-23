@@ -7,6 +7,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.junit.jupiter.api.BeforeEach;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Optional;
 
@@ -65,7 +66,7 @@ class UserServiceTest {
 
     @Test
     void createsTheInitialAdminWithAHash() {
-        when(userRepository.findByEmailIgnoreCase("admin@artifact.com")).thenReturn(Optional.empty());
+        when(userRepository.existsByRole(Role.ADMIN)).thenReturn(false);
 
         userService.ensureInitialAdmin();
 
@@ -74,6 +75,16 @@ class UserServiceTest {
         assertEquals("admin@artifact.com", savedUser.getValue().getEmail());
         assertEquals(Role.ADMIN, savedUser.getValue().getRole());
         assertNotEquals("local-test-password", savedUser.getValue().getPasswordHash());
+    }
+
+    @Test
+    void productionRejectsKnownDevelopmentBootstrapPassword() {
+        UserService production = new UserService(userRepository, "123456");
+        ReflectionTestUtils.setField(production, "activeProfiles", "prod");
+        when(userRepository.existsByRole(Role.ADMIN)).thenReturn(false);
+
+        assertThrows(IllegalStateException.class, production::ensureInitialAdmin);
+        verify(userRepository, never()).save(any());
     }
 
     @Test

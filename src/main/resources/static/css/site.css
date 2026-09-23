@@ -265,9 +265,25 @@ h3 {
 .activity-card dd { margin: 0; text-align: right; font-size: .9rem; font-weight: 700; }
 .empty-state { padding: 1rem; border: 1px dashed #d7c6b5; border-radius: .4rem; }
 
+.discovery-form { padding: 1.25rem; border: 1px solid #e3d8ca; border-radius: .55rem; background: #fffdf9; box-shadow: 0 6px 22px rgba(32, 26, 22, .05); font-family: Arial, sans-serif; }
+.discovery-form .form-label { color: #51463f; font-size: .82rem; font-weight: 700; }
+.active-filters { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; font-family: Arial, sans-serif; }
+.active-filters-label { color: #6e625a; font-size: .85rem; font-weight: 700; }
+.filter-chip { padding: .4rem .65rem; border: 1px solid #d5b9a7; border-radius: 999px; background: #fff7f1; color: #6f3828; font-size: .82rem; text-decoration: none; }
+.filter-chip:hover { background: #f3e2d5; color: #542719; }
+.filter-clear { margin-left: .25rem; color: #6f3828; font: .82rem Arial, sans-serif; }
+.auction-card-meta { display: grid; grid-template-columns: 1fr auto; gap: 1rem; padding: .85rem 0; }
+.auction-card-meta span { display: grid; gap: .1rem; }
+.auction-card-meta span:last-child { text-align: right; }
+.auction-card-meta small, .artifact-card time { color: #6e625a; font: .78rem Arial, sans-serif; }
+.discovery-empty { padding: 2rem; text-align: center; background: #fffdf9; }
+.discovery-empty h3 { font-size: 1.35rem; }
+.pagination { --bs-pagination-color: var(--clay); --bs-pagination-active-bg: var(--clay); --bs-pagination-active-border-color: var(--clay); }
+
 a:focus-visible,
 button:focus-visible,
-input:focus-visible {
+input:focus-visible,
+select:focus-visible {
   outline: 3px solid rgba(156, 79, 46, .55);
   outline-offset: 2px;
 }
@@ -290,6 +306,9 @@ input:focus-visible {
   }
 
   .auction-facts { grid-template-columns: 1fr; }
+  .discovery-form { padding: 1rem; }
+  .active-filters { align-items: stretch; }
+  .filter-chip { width: 100%; }
 }
 
 @media (prefers-reduced-motion: reduce) {

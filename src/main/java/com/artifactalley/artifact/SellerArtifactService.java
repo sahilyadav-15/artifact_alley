@@ -4,6 +4,8 @@ import com.artifactalley.bid.BidRepository;
 import com.artifactalley.user.Role;
 import com.artifactalley.user.User;
 import com.artifactalley.user.UserRepository;
+import com.artifactalley.security.SecurityAuditService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,6 +21,8 @@ public class SellerArtifactService {
     private final BidRepository bids;
     private final ArtifactImageService images;
     private final Clock clock;
+    @Autowired(required = false)
+    private SecurityAuditService audit;
 
     public SellerArtifactService(ArtifactRepository artifacts, UserRepository users, BidRepository bids,
                                  ArtifactImageService images, Clock clock) {
@@ -47,6 +51,12 @@ public class SellerArtifactService {
     public List<Artifact> findOwned(Long sellerId) {
         seller(sellerId);
         return artifacts.findAllOwnedBy(sellerId);
+    }
+
+    @Transactional(readOnly = true)
+    public long bidCountForOwned(Long artifactId, Long sellerId) {
+        owned(artifactId, sellerId);
+        return bids.countByArtifactId(artifactId);
     }
 
     @Transactional(readOnly = true)
@@ -85,6 +95,7 @@ public class SellerArtifactService {
         }
         try { artifact.withdraw(now); }
         catch (IllegalStateException exception) { throw new ArtifactOperationException(exception.getMessage()); }
+        if (audit != null) audit.record("ARTIFACT_WITHDRAWN", sellerId, artifactId, "success");
     }
 
     public ArtifactSubmissionForm editForm(Artifact artifact) {

@@ -3,3 +3,14 @@ data/
 .idea/
 *.iml
 .env
+.env.*
+!.env.example
+uploads/
+backups/
+recovery/
+*.log
+*.sql
+*.dump
+*.backup
+image-migration-report*
+migration-output/

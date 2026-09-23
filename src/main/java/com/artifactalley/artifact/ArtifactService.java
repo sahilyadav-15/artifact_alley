@@ -24,7 +24,7 @@ public class ArtifactService {
     public Artifact submit(String title, Category category, String era, BigDecimal startingPrice,
                            LocalDateTime closesAt, String description, String sellerEmail) {
         Artifact artifact = new Artifact(title.trim(), category, era.trim(), startingPrice, closesAt,
-                description.trim(), sellerEmail, ArtifactStatus.PENDING_APPROVAL);
+                description.trim(), null, sellerEmail, ArtifactStatus.PENDING_APPROVAL, LocalDateTime.now(clock));
         return artifactRepository.save(artifact);
     }
 

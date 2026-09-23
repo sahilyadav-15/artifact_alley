@@ -9,9 +9,10 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -140,13 +141,26 @@ public class ArtifactImageService {
         if (upload.getSize() > MAX_BYTES) throw new ArtifactOperationException("Each image must be 5 MB or smaller.");
         try {
             byte[] source = upload.getBytes();
-            BufferedImage decoded = ImageIO.read(new ByteArrayInputStream(source));
+            BufferedImage decoded;
+            String actualFormat;
+            try (ImageInputStream input = ImageIO.createImageInputStream(new java.io.ByteArrayInputStream(source))) {
+                if (input == null) throw new ArtifactOperationException("The uploaded file is not a supported image.");
+                var readers = ImageIO.getImageReaders(input);
+                if (!readers.hasNext()) throw new ArtifactOperationException("The uploaded file is not a supported image.");
+                ImageReader reader = readers.next();
+                try {
+                    reader.setInput(input, true, true);
+                    actualFormat = reader.getFormatName().toLowerCase(java.util.Locale.ROOT);
+                    decoded = reader.read(0);
+                } finally { reader.dispose(); }
+            }
             if (decoded == null || (long) decoded.getWidth() * decoded.getHeight() > MAX_PIXELS) {
                 throw new ArtifactOperationException("The uploaded file is not a supported image.");
             }
             String suppliedType = upload.getContentType();
-            boolean png = MediaType.IMAGE_PNG_VALUE.equalsIgnoreCase(suppliedType);
-            boolean jpeg = MediaType.IMAGE_JPEG_VALUE.equalsIgnoreCase(suppliedType) || "image/jpg".equalsIgnoreCase(suppliedType);
+            boolean png = "png".equals(actualFormat) && MediaType.IMAGE_PNG_VALUE.equalsIgnoreCase(suppliedType);
+            boolean jpeg = ("jpeg".equals(actualFormat) || "jpg".equals(actualFormat))
+                    && (MediaType.IMAGE_JPEG_VALUE.equalsIgnoreCase(suppliedType) || "image/jpg".equalsIgnoreCase(suppliedType));
             if (!png && !jpeg) throw new ArtifactOperationException("Only JPEG and PNG images are accepted.");
             String extension = png ? "png" : "jpg";
             String type = png ? MediaType.IMAGE_PNG_VALUE : MediaType.IMAGE_JPEG_VALUE;

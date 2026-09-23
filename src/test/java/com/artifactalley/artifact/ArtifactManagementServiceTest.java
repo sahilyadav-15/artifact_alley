@@ -1,6 +1,7 @@
 package com.artifactalley.artifact;
 
 import com.artifactalley.bid.BidRepository;
+import com.artifactalley.bid.Bid;
 import com.artifactalley.user.Role;
 import com.artifactalley.user.User;
 import com.artifactalley.user.UserRepository;
@@ -85,6 +86,22 @@ class ArtifactManagementServiceTest {
         when(artifacts.findByIdForUpdate(10L)).thenReturn(Optional.of(artifact));
         assertThrows(IllegalStateException.class, () -> sellers.edit(10L, 1L, form("Changed")));
         assertThrows(IllegalStateException.class, () -> sellers.resubmit(10L, 1L));
+    }
+
+    @Test
+    void soldAndClosedListingsAreReadOnlyAndCannotBeWithdrawn() {
+        User bidder = user(4L, "Bidder", "bidder@example.com", Role.BIDDER);
+        Artifact sold = pending(seller); sold.approve(admin, LocalDateTime.now(clock));
+        sold.settleSold(new Bid(sold, bidder, new BigDecimal("300.00"), LocalDateTime.now(clock)), LocalDateTime.now(clock));
+        when(artifacts.findByIdForUpdate(10L)).thenReturn(Optional.of(sold));
+        assertThrows(IllegalStateException.class, () -> sellers.edit(10L, 1L, form("Changed")));
+        assertThrows(ArtifactOperationException.class, () -> sellers.withdraw(10L, 1L));
+
+        Artifact closed = pending(seller); closed.approve(admin, LocalDateTime.now(clock));
+        closed.settleClosed(LocalDateTime.now(clock));
+        when(artifacts.findByIdForUpdate(11L)).thenReturn(Optional.of(closed));
+        assertThrows(IllegalStateException.class, () -> sellers.edit(11L, 1L, form("Changed")));
+        assertThrows(ArtifactOperationException.class, () -> sellers.withdraw(11L, 1L));
     }
 
     @Test

@@ -6,6 +6,8 @@ import com.artifactalley.artifact.ArtifactStatus;
 import com.artifactalley.user.Role;
 import com.artifactalley.user.User;
 import com.artifactalley.user.UserRepository;
+import com.artifactalley.security.SecurityAuditService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +24,8 @@ public class BiddingService {
     private final BidRepository bidRepository;
     private final BigDecimal minimumIncrement;
     private final Clock clock;
+    @Autowired(required = false)
+    private SecurityAuditService audit;
 
     public BiddingService(ArtifactRepository artifactRepository, UserRepository userRepository,
                           BidRepository bidRepository,
@@ -69,6 +73,7 @@ public class BiddingService {
         Bid bid = bidRepository.save(new Bid(artifact, bidder, amount, placedAt));
         artifact.updateCurrentPrice(amount);
         artifactRepository.save(artifact);
+        if (audit != null) audit.record("BID_ACCEPTED", bidderUserId, artifactId, "success");
         return bid;
     }
 

@@ -18,9 +18,10 @@
                         <p class="eyebrow text-dark">WELCOME BACK</p>
                         <h1>Sign in</h1>
                         <c:if test="${not empty errorMessage}">
-                            <div class="alert alert-danger" role="alert">${errorMessage}</div>
+                            <div class="alert alert-danger" role="alert"><c:out value="${errorMessage}" /></div>
                         </c:if>
                         <form:form method="post" modelAttribute="loginForm" class="mt-4" novalidate="true">
+                            <input type="hidden" name="_csrf" value="${csrfToken}">
                             <form:errors path="*" cssClass="alert alert-danger d-block" element="div" />
                             <div class="mb-3">
                                 <form:label path="email" cssClass="form-label">Email address</form:label>
@@ -51,7 +52,7 @@
                         </p>
                     </div>
                 </main>
-                <script>
+                <script nonce="${cspNonce}">
                     document.querySelectorAll('[data-password-toggle]').forEach(button => {
                         button.addEventListener('click', () => {
                             const input = document.getElementById(button.dataset.target);

@@ -8,6 +8,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -16,7 +17,10 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "bids")
+@Table(name = "bids", indexes = {
+        @Index(name = "idx_bid_artifact_placed", columnList = "artifact_id,placed_at"),
+        @Index(name = "idx_bid_bidder", columnList = "bidder_id")
+})
 public class Bid {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,6 +1,7 @@
 package com.artifactalley.artifact;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -10,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import java.time.LocalDateTime;
 
-public interface ArtifactRepository extends JpaRepository<Artifact, Long> {
+public interface ArtifactRepository extends JpaRepository<Artifact, Long>, JpaSpecificationExecutor<Artifact> {
     List<Artifact> findByStatusOrderByClosesAtAsc(ArtifactStatus status);
 
     List<Artifact> findByStatusOrderByIdAsc(ArtifactStatus status);

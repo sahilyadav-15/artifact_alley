@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Component;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -13,6 +14,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.UUID;
 
 @Component
+@ConditionalOnProperty(name = "artifactalley.images.storage", havingValue = "local", matchIfMissing = true)
 public class LocalArtifactImageStorage implements ArtifactImageStorage {
     private final Path root;
 

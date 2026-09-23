@@ -4,7 +4,8 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "artifact_images")
+@Table(name = "artifact_images", indexes =
+        @Index(name = "idx_artifact_image_order", columnList = "artifact_id,display_order"))
 public class ArtifactImage {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -13,7 +14,7 @@ public class ArtifactImage {
     @JoinColumn(name = "artifact_id", nullable = false)
     private Artifact artifact;
 
-    @Column(nullable = false, unique = true, length = 100)
+    @Column(nullable = false, unique = true, length = 160)
     private String storageKey;
     @Column(nullable = false, length = 255)
     private String originalFilename;
@@ -41,6 +42,7 @@ public class ArtifactImage {
 
     public void makeCover(boolean cover) { this.coverImage = cover; }
     public void moveTo(int order) { this.displayOrder = order; }
+    public void migrateStorageKey(String storageKey) { this.storageKey = storageKey; }
     public Long getId() { return id; }
     public Artifact getArtifact() { return artifact; }
     public String getStorageKey() { return storageKey; }

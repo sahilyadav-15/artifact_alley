@@ -16,15 +16,16 @@ public class DemoDataConfig {
         return args -> {
             userService.ensureInitialAdmin();
             if (repository.count() == 0) {
+                LocalDateTime now = LocalDateTime.now(clock);
                 repository.save(new Artifact("Chola Bronze Nataraja", Category.SCULPTURE, "11th–12th century",
                         new BigDecimal("85000.00"), LocalDateTime.now(clock).plusDays(4),
-                        "A finely detailed bronze representation of Shiva as Nataraja."));
+                        "A finely detailed bronze representation of Shiva as Nataraja.", null, null, ArtifactStatus.LIVE, now));
                 repository.save(new Artifact("Mughal Miniature Painting", Category.PAINTING, "18th century",
                         new BigDecimal("42000.00"), LocalDateTime.now(clock).plusDays(2),
-                        "Courtly miniature artwork with natural pigments on handmade paper."));
+                        "Courtly miniature artwork with natural pigments on handmade paper.", null, null, ArtifactStatus.LIVE, now));
                 repository.save(new Artifact("British India Silver Rupee", Category.COIN, "1911",
                         new BigDecimal("6000.00"), LocalDateTime.now(clock).plusDays(6),
-                        "Silver rupee from the reign of George V, offered for collectors."));
+                        "Silver rupee from the reign of George V, offered for collectors.", null, null, ArtifactStatus.LIVE, now));
             }
         };
     }

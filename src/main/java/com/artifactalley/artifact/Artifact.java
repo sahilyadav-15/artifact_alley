@@ -7,7 +7,14 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "artifacts")
+@Table(name = "artifacts", indexes = {
+        @Index(name = "idx_artifact_status_closes", columnList = "status,closes_at"),
+        @Index(name = "idx_artifact_status_id", columnList = "status,id"),
+        @Index(name = "idx_artifact_seller", columnList = "seller_id"),
+        @Index(name = "idx_artifact_category", columnList = "category"),
+        @Index(name = "idx_artifact_current_price", columnList = "current_price"),
+        @Index(name = "idx_artifact_submitted", columnList = "submitted_at")
+})
 public class Artifact {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

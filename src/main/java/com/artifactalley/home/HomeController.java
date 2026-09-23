@@ -1,29 +1,45 @@
 package com.artifactalley.home;
 
-import com.artifactalley.artifact.ArtifactService;
-import com.artifactalley.artifact.ArtifactImageService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.artifactalley.artifact.ArtifactSearchRequest;
+import com.artifactalley.artifact.ArtifactSearchService;
+import com.artifactalley.artifact.ArtifactSearchValidationException;
+import com.artifactalley.artifact.Category;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class HomeController {
-    private final ArtifactService artifactService;
-    @Autowired(required = false)
-    private ArtifactImageService imageService;
+    private final ArtifactSearchService searchService;
 
-    public HomeController(ArtifactService artifactService) {
-        this.artifactService = artifactService;
+    public HomeController(ArtifactSearchService searchService) {
+        this.searchService = searchService;
     }
 
     @GetMapping("/")
-    public String home(Model model) {
-        var artifacts = artifactService.findLiveArtifacts();
-        model.addAttribute("artifacts", artifacts);
-        java.util.Map<Long, String> coverUrls = new java.util.LinkedHashMap<>();
-        if (imageService != null) artifacts.forEach(artifact -> coverUrls.put(artifact.getId(), imageService.coverUrl(artifact.getId())));
-        model.addAttribute("coverImageUrls", coverUrls);
+    public String home(@RequestParam(name = "q", required = false) String query,
+                       @RequestParam(required = false) String category,
+                       @RequestParam(required = false) String era,
+                       @RequestParam(required = false) String minPrice,
+                       @RequestParam(required = false) String maxPrice,
+                       @RequestParam(required = false) String endingWithin,
+                       @RequestParam(required = false) String sort,
+                       @RequestParam(required = false) String page,
+                       @RequestParam(required = false) String size,
+                       Model model) {
+        ArtifactSearchRequest request = new ArtifactSearchRequest(query, category, era, minPrice, maxPrice,
+                endingWithin, sort, page, size);
+        try {
+            model.addAttribute("searchResult", searchService.searchActiveArtifacts(request));
+        } catch (ArtifactSearchValidationException exception) {
+            model.addAttribute("searchError", exception.getMessage());
+            model.addAttribute("invalidField", exception.getField());
+            model.addAttribute("searchResult", searchService.searchActiveArtifacts(
+                    new ArtifactSearchRequest(null, null, null, null, null, null, null, null, null)));
+        }
+        model.addAttribute("searchRequest", request);
+        model.addAttribute("categories", Category.values());
         return "home";
     }
 }
