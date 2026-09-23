@@ -1,0 +1,181 @@
+{"kind":"deck","id":"pr/dawpdf","name":"Deck"}
+{"kind":"layout","layoutId":"c3c490dc-42d3-4912-9cf7-28e093b45339","name":"Master","type":"master"}
+{"kind":"layout","layoutId":"403cc428-f84e-4bc8-bd66-35965ba29d51","name":"Title Slide","type":"title"}
+{"kind":"slide","id":"sl/0dw0uo","slide":1,"title":"Artifact Alley","textShapes":5}
+{"kind":"shape","id":"sh/b6543y94","slide":1,"bbox":[0,0,1280,720]}
+{"kind":"shape","id":"sh/crelc3qp","slide":1,"bbox":[0,0,1280,12]}
+{"kind":"shape","id":"sh/dsnm58ra","slide":1,"bbox":[805,96,360,360]}
+{"kind":"textbox","id":"sh/zup47y90","slide":1,"text":"Artifact Alley","textPreview":"Artifact Alley","textChars":14,"textLines":1,"bbox":[82,152,650,70]}
+{"kind":"textbox","id":"sh/0vy5g3ql","slide":1,"text":"Online Auction Platform for Artifacts and Antiques","textPreview":"Online Auction Platform for Artifacts and Antiques","textChars":50,"textLines":1,"bbox":[84,232,590,62]}
+{"kind":"textbox","id":"sh/lw7m98r6","slide":1,"text":"College Project Presentation","textPreview":"College Project Presentation","textChars":28,"textLines":1,"bbox":[84,326,370,30]}
+{"kind":"textbox","id":"sh/exc3298b","slide":1,"text":"Proposed completed-system overview","textPreview":"Proposed completed-system overview","textChars":34,"textLines":1,"bbox":[84,378,445,28]}
+{"kind":"textbox","id":"sh/fyl4ve9w","slide":1,"text":"A role-based platform for trusted artifact discovery, approval, and bidding","textPreview":"A role-based platform for trusted artifact discovery, approval, and bidding","textChars":75,"textLines":1,"bbox":[84,468,555,58]}
+{"kind":"image","id":"im/fytc7u1c","slide":1,"name":"","alt":"Auction bidding illustration","bbox":[830,122,310,310]}
+{"kind":"notes","id":"nt/0dw0uo","slide":1,"text":"This deck presents the intended completed version of Artifact Alley. It does not claim that every planned feature is already implemented."}
+{"kind":"slide","id":"sl/tf5mjx","slide":2,"title":"Why Artifact Alley","textShapes":15}
+{"kind":"shape","id":"sh/wrylcvm9","slide":2,"bbox":[0,0,1280,16]}
+{"kind":"textbox","id":"sh/vqpk3a54","slide":2,"text":"Why Artifact Alley","textPreview":"Why Artifact Alley","textChars":18,"textLines":1,"bbox":[70,90,1040,60]}
+{"kind":"textbox","id":"sh/apg3a54j","slide":2,"text":"The project addresses the difficulty of organizing trusted online auctions for artifacts and antiques.","textPreview":"The project addresses the difficulty of organizing trusted online auctions for artifacts and antiques.","textChars":102,"textLines":1,"bbox":[72,148,1020,28]}
+{"kind":"textbox","id":"sh/5w729kn6","slide":2,"text":"Artifact Alley  |  02","textPreview":"Artifact Alley  |  02","textChars":21,"textLines":1,"bbox":[1070,666,150,22]}
+{"kind":"shape","id":"sh/kvylgfml","slide":2,"bbox":[72,174,498,392]}
+{"kind":"textbox","id":"sh/jupk7a50","slide":2,"text":"Current difficulty","textPreview":"Current difficulty","textChars":18,"textLines":1,"bbox":[112,214,330,34]}
+{"kind":"textbox","id":"sh/itg3e54f","slide":2,"text":"Collectors need a clear way to discover items, follow active auctions, and place bids. Sellers need a controlled path to publish listings. An administrator needs oversight before an item appears publicly.","textPreview":"Collectors need a clear way to discover items, follow active auctions, and place bids. Sellers need a controlled path to publish listings...","textChars":204,"textLines":1,"bbox":[112,276,395,184]}
+{"kind":"shape","id":"sh/l0n2xgnm","slide":2,"bbox":[642,174,565,392]}
+{"kind":"textbox","id":"sh/0ze14bmh","slide":2,"text":"Project response","textPreview":"Project response","textChars":16,"textLines":1,"bbox":[686,214,360,34]}
+{"kind":"shape","id":"sh/adkfixw3","slide":2,"bbox":[686,286,54,54]}
+{"kind":"textbox","id":"sh/betgb2do","slide":2,"text":"1","textPreview":"1","textChars":1,"textLines":1,"bbox":[686,296,54,28]}
+{"kind":"textbox","id":"sh/wf2xk7e9","slide":2,"text":"Discover","textPreview":"Discover","textChars":8,"textLines":1,"bbox":[758,289,250,28]}
+{"kind":"textbox","id":"sh/xgbydcvu","slide":2,"text":"Browse a curated catalogue of live auction items.","textPreview":"Browse a curated catalogue of live auction items.","textChars":49,"textLines":1,"bbox":[758,322,285,55]}
+{"kind":"shape","id":"sh/y14fmhwf","slide":2,"bbox":[686,390,54,54]}
+{"kind":"textbox","id":"sh/j2dgf2dk","slide":2,"text":"2","textPreview":"2","textChars":1,"textLines":1,"bbox":[686,400,54,28]}
+{"kind":"textbox","id":"sh/k3mxo7e5","slide":2,"text":"Participate","textPreview":"Participate","textChars":11,"textLines":1,"bbox":[758,393,250,28]}
+{"kind":"textbox","id":"sh/l4vyhcvq","slide":2,"text":"Sign in and place a valid bid on an active item.","textPreview":"Sign in and place a valid bid on an active item.","textChars":48,"textLines":1,"bbox":[758,426,285,55]}
+{"kind":"shape","id":"sh/654zqhwb","slide":2,"bbox":[686,494,54,54]}
+{"kind":"textbox","id":"sh/76dgjmdw","slide":2,"text":"3","textPreview":"3","textChars":1,"textLines":1,"bbox":[686,504,54,28]}
+{"kind":"textbox","id":"sh/3axw7mt4","slide":2,"text":"Supervise","textPreview":"Supervise","textChars":9,"textLines":1,"bbox":[758,497,250,28]}
+{"kind":"textbox","id":"sh/29ofehsj","slide":2,"text":"Review seller submissions before public release.","textPreview":"Review seller submissions before public release.","textChars":48,"textLines":1,"bbox":[758,530,285,55]}
+{"kind":"notes","id":"nt/tf5mjx","slide":2,"text":"Class presentation convention used: state the problem first, then explain the solution in plain terms."}
+{"kind":"slide","id":"sl/vd41hs","slide":3,"title":"Project objectives","textShapes":11}
+{"kind":"shape","id":"sh/e1crudwb","slide":3,"bbox":[0,0,1280,16]}
+{"kind":"textbox","id":"sh/14nqpsvm","slide":3,"text":"Project objectives","textPreview":"Project objectives","textChars":18,"textLines":1,"bbox":[70,90,1040,60]}
+{"kind":"textbox","id":"sh/g3e9wneh","slide":3,"text":"The completed system will support the main auction journey while keeping actions tied to user roles.","textPreview":"The completed system will support the main auction journey while keeping actions tied to user roles.","textChars":100,"textLines":1,"bbox":[72,148,1020,28]}
+{"kind":"textbox","id":"sh/3658rids","slide":3,"text":"Artifact Alley  |  03","textPreview":"Artifact Alley  |  03","textChars":21,"textLines":1,"bbox":[1070,666,150,22]}
+{"kind":"shape","id":"sh/25wryxw7","slide":3,"bbox":[72,174,530,160]}
+{"kind":"shape","id":"sh/psnqtsvy","slide":3,"bbox":[100,205,14,96]}
+{"kind":"textbox","id":"sh/o7e90ned","slide":3,"text":"Trusted access","textPreview":"Trusted access","textChars":14,"textLines":1,"bbox":[138,205,420,30]}
+{"kind":"textbox","id":"sh/bup8v2d4","slide":3,"text":"Create accounts and sign in with server-side validation and secure password storage.","textPreview":"Create accounts and sign in with server-side validation and secure password storage.","textChars":84,"textLines":1,"bbox":[138,250,410,58]}
+{"kind":"shape","id":"sh/qtgr2xwj","slide":3,"bbox":[642,174,530,160]}
+{"kind":"shape","id":"sh/8j6tg3up","slide":3,"bbox":[670,205,14,96]}
+{"kind":"textbox","id":"sh/9kza98ba","slide":3,"text":"Controlled listing","textPreview":"Controlled listing","textChars":18,"textLines":1,"bbox":[708,205,420,30]}
+{"kind":"textbox","id":"sh/mhobetcj","slide":3,"text":"Let sellers submit artifact listings for review before publication.","textPreview":"Let sellers submit artifact listings for review before publication.","textChars":67,"textLines":1,"bbox":[708,250,410,58]}
+{"kind":"shape","id":"sh/nixs7yt4","slide":3,"bbox":[72,379,530,160]}
+{"kind":"shape","id":"sh/wnqtk3ul","slide":3,"bbox":[100,410,14,96]}
+{"kind":"textbox","id":"sh/xozad8b6","slide":3,"text":"Fair bidding","textPreview":"Fair bidding","textChars":12,"textLines":1,"bbox":[138,410,420,30]}
+{"kind":"textbox","id":"sh/al8bidcv","slide":3,"text":"Accept bids only when the auction is live and the amount meets the required minimum.","textPreview":"Accept bids only when the auction is live and the amount meets the required minimum.","textChars":84,"textLines":1,"bbox":[138,455,410,58]}
+{"kind":"shape","id":"sh/vmhsbit0","slide":3,"bbox":[642,379,530,160]}
+{"kind":"shape","id":"sh/4bqtonux","slide":3,"bbox":[670,410,14,96]}
+{"kind":"textbox","id":"sh/5cjuhsbi","slide":3,"text":"Administrative review","textPreview":"Administrative review","textChars":21,"textLines":1,"bbox":[708,410,420,30]}
+{"kind":"textbox","id":"sh/d8fa1s3m","slide":3,"text":"Allow an administrator to approve suitable submissions and manage the marketplace.","textPreview":"Allow an administrator to approve suitable submissions and manage the marketplace.","textChars":82,"textLines":1,"bbox":[708,455,410,58]}
+{"kind":"notes","id":"nt/vd41hs","slide":3,"text":""}
+{"kind":"slide","id":"sl/7mm1ht","slide":4,"title":"Users and responsibilities","textShapes":10}
+{"kind":"shape","id":"sh/4nm9sju9","slide":4,"bbox":[0,0,1280,16]}
+{"kind":"textbox","id":"sh/jmdszedo","slide":4,"text":"Users and responsibilities","textPreview":"Users and responsibilities","textChars":26,"textLines":1,"bbox":[70,90,1040,60]}
+{"kind":"textbox","id":"sh/il4rqtc3","slide":4,"text":"Role-based access keeps each part of the marketplace focused and accountable.","textPreview":"Role-based access keeps each part of the marketplace focused and accountable.","textChars":77,"textLines":1,"bbox":[72,148,1020,28]}
+{"kind":"textbox","id":"sh/tsvap8vq","slide":4,"text":"Artifact Alley  |  04","textPreview":"Artifact Alley  |  04","textChars":21,"textLines":1,"bbox":[1070,666,150,22]}
+{"kind":"shape","id":"sh/srm9w3u5","slide":4,"bbox":[86,184,330,320]}
+{"kind":"shape","id":"sh/rqds3ydk","slide":4,"bbox":[86,184,330,10]}
+{"kind":"textbox","id":"sh/6p4rutcz","slide":4,"text":"Bidder","textPreview":"Bidder","textChars":6,"textLines":1,"bbox":[120,232,260,38]}
+{"kind":"textbox","id":"sh/9wbat4vm","slide":4,"text":"Browse live auctions\nView auction details\nPlace valid bids","textPreview":"Browse live auctions | View auction details | Place valid bids","textChars":58,"textLines":3,"bbox":[120,302,250,145]}
+{"kind":"shape","id":"sh/8v29kzu1","slide":4,"bbox":[476,184,330,320]}
+{"kind":"shape","id":"sh/adofel8n","slide":4,"bbox":[476,184,330,10]}
+{"kind":"textbox","id":"sh/behw7qp8","slide":4,"text":"Seller","textPreview":"Seller","textChars":6,"textLines":1,"bbox":[510,232,260,38]}
+{"kind":"textbox","id":"sh/wfqxgvqt","slide":4,"text":"Register as a seller\nSubmit an artifact\nTrack approval status","textPreview":"Register as a seller | Submit an artifact | Track approval status","textChars":61,"textLines":3,"bbox":[510,302,250,145]}
+{"kind":"shape","id":"sh/xgze907e","slide":4,"bbox":[866,184,330,320]}
+{"kind":"shape","id":"sh/yh8fi58j","slide":4,"bbox":[866,184,330,10]}
+{"kind":"textbox","id":"sh/jihwbap4","slide":4,"text":"Administrator","textPreview":"Administrator","textChars":13,"textLines":1,"bbox":[900,232,260,38]}
+{"kind":"textbox","id":"sh/kjqxkvqp","slide":4,"text":"Review pending listings\nApprove listings\nMaintain marketplace quality","textPreview":"Review pending listings | Approve listings | Maintain marketplace quality","textChars":69,"textLines":3,"bbox":[900,302,250,145]}
+{"kind":"textbox","id":"sh/lkzed07a","slide":4,"text":"A visitor may browse the catalogue. Account-only actions require the relevant role.","textPreview":"A visitor may browse the catalogue. Account-only actions require the relevant role.","textChars":83,"textLines":1,"bbox":[160,565,960,30]}
+{"kind":"notes","id":"nt/7mm1ht","slide":4,"text":""}
+{"kind":"slide","id":"sl/avh4ho","slide":5,"title":"How the completed system will work","textShapes":8}
+{"kind":"shape","id":"sh/sn2xwz29","slide":5,"bbox":[0,0,1280,16]}
+{"kind":"textbox","id":"sh/7m9w3ul4","slide":5,"text":"How the completed system will work","textPreview":"How the completed system will work","textChars":34,"textLines":1,"bbox":[70,90,1040,60]}
+{"kind":"textbox","id":"sh/6l0vupkj","slide":5,"text":"The public auction flow begins with a seller submission and ends with a bidder action on a live listing.","textPreview":"The public auction flow begins with a seller submission and ends with a bidder action on a live listing.","textChars":104,"textLines":1,"bbox":[72,148,1020,28]}
+{"kind":"textbox","id":"sh/5kre1k3y","slide":5,"text":"Artifact Alley  |  05","textPreview":"Artifact Alley  |  05","textChars":21,"textLines":1,"bbox":[1070,666,150,22]}
+{"kind":"shape","id":"sh/kjidsf2d","slide":5,"bbox":[80,290,205,125]}
+{"kind":"textbox","id":"sh/ji9wzals","slide":5,"text":"Seller submits\nartifact","textPreview":"Seller submits | artifact","textChars":23,"textLines":2,"bbox":[100,325,165,58]}
+{"kind":"shape","id":"sh/ih0vq5k7","slide":5,"bbox":[340,290,205,125]}
+{"kind":"textbox","id":"sh/xgrexk3m","slide":5,"text":"Admin reviews\nsubmission","textPreview":"Admin reviews | submission","textChars":24,"textLines":2,"bbox":[360,325,165,58]}
+{"kind":"shape","id":"sh/wfidof21","slide":5,"bbox":[600,290,205,125]}
+{"kind":"textbox","id":"sh/qds7u9o3","slide":5,"text":"Approved listing\nbecomes live","textPreview":"Approved listing | becomes live","textChars":29,"textLines":2,"bbox":[620,325,165,58]}
+{"kind":"shape","id":"sh/re1one5o","slide":5,"bbox":[860,290,205,125]}
+{"kind":"textbox","id":"sh/cfupwj69","slide":5,"text":"Bidder views\nand bids","textPreview":"Bidder views | and bids","textChars":21,"textLines":2,"bbox":[880,325,165,58]}
+{"kind":"shape","id":"sh/dg36ponu","slide":5,"bbox":[285,352.5,55,0]}
+{"kind":"shape","id":"sh/29snq9o7","slide":5,"bbox":[545,352.5,55,0]}
+{"kind":"shape","id":"sh/3a1oju5c","slide":5,"bbox":[805,352.5,55,0]}
+{"kind":"textbox","id":"sh/4ba5sz6x","slide":5,"text":"Approval protects the public catalogue. Bid rules protect the auction process.","textPreview":"Approval protects the public catalogue. Bid rules protect the auction process.","textChars":78,"textLines":1,"bbox":[180,514,920,34]}
+{"kind":"notes","id":"nt/avh4ho","slide":5,"text":""}
+{"kind":"slide","id":"sl/ewjrmq","slide":6,"title":"Proposed system architecture","textShapes":11}
+{"kind":"shape","id":"sh/s7qtgr21","slide":6,"bbox":[0,0,1280,16]}
+{"kind":"textbox","id":"sh/r6hs7m1g","slide":6,"text":"Proposed system architecture","textPreview":"Proposed system architecture","textChars":28,"textLines":1,"bbox":[70,90,1040,60]}
+{"kind":"textbox","id":"sh/q58re1kv","slide":6,"text":"A layered Spring application separates the browser experience, business rules, and stored data.","textPreview":"A layered Spring application separates the browser experience, business rules, and stored data.","textChars":95,"textLines":1,"bbox":[72,148,1020,28]}
+{"kind":"textbox","id":"sh/1wzadgjy","slide":6,"text":"Artifact Alley  |  06","textPreview":"Artifact Alley  |  06","textChars":21,"textLines":1,"bbox":[1070,666,150,22]}
+{"kind":"shape","id":"sh/0bqtkb2d","slide":6,"bbox":[88,275,220,120]}
+{"kind":"shape","id":"sh/fahsb61s","slide":6,"bbox":[405,245,250,180]}
+{"kind":"shape","id":"sh/e98bi1k7","slide":6,"bbox":[758,275,220,120]}
+{"kind":"shape","id":"sh/p0jahgju","slide":6,"bbox":[1064,275,135,120]}
+{"kind":"textbox","id":"sh/ozatobi9","slide":6,"text":"Browser","textPreview":"Browser","textChars":7,"textLines":1,"bbox":[122,300,155,32]}
+{"kind":"textbox","id":"sh/qxc3itg7","slide":6,"text":"JSP pages\nCSS","textPreview":"JSP pages | CSS","textChars":13,"textLines":2,"bbox":[122,341,155,45]}
+{"kind":"textbox","id":"sh/rilkryxs","slide":6,"text":"Spring Boot","textPreview":"Spring Boot","textChars":11,"textLines":1,"bbox":[440,270,180,32]}
+{"kind":"textbox","id":"sh/cjulk3yd","slide":6,"text":"Spring MVC controllers\nServices and validation\nSpring Data JPA","textPreview":"Spring MVC controllers | Services and validation | Spring Data JPA","textChars":62,"textLines":3,"bbox":[440,318,180,72]}
+{"kind":"textbox","id":"sh/dk32t8fy","slide":6,"text":"Database","textPreview":"Database","textChars":8,"textLines":1,"bbox":[794,300,150,32]}
+{"kind":"textbox","id":"sh/elc3mdgj","slide":6,"text":"H2 for local work\nPostgreSQL for deployment","textPreview":"H2 for local work | PostgreSQL for deployment","textChars":43,"textLines":2,"bbox":[787,341,165,45]}
+{"kind":"textbox","id":"sh/zmlkvixo","slide":6,"text":"Deploy","textPreview":"Deploy","textChars":6,"textLines":1,"bbox":[1080,303,100,28]}
+{"kind":"textbox","id":"sh/0nelony9","slide":6,"text":"Render","textPreview":"Render","textChars":6,"textLines":1,"bbox":[1080,345,100,24]}
+{"kind":"shape","id":"sh/1onmx8fu","slide":6,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/ups3a9gz","slide":6,"bbox":[0,0,0,0]}
+{"kind":"shape","id":"sh/vq1kjexk","slide":6,"bbox":[0,0,0,0]}
+{"kind":"notes","id":"nt/ewjrmq","slide":6,"text":"Technology choices are based on the repository pom.xml and deployment documentation."}
+{"kind":"slide","id":"sl/lewio7","slide":7,"title":"Technology stack","textShapes":17}
+{"kind":"shape","id":"sh/hsfupcf2","slide":7,"bbox":[0,0,1280,16]}
+{"kind":"textbox","id":"sh/u5ovuhgr","slide":7,"text":"Technology stack","textPreview":"Technology stack","textChars":16,"textLines":1,"bbox":[70,90,1040,60]}
+{"kind":"textbox","id":"sh/fqxcnmxc","slide":7,"text":"The stack matches the Java syllabus and supports a server-rendered web application.","textPreview":"The stack matches the Java syllabus and supports a server-rendered web application.","textChars":83,"textLines":1,"bbox":[72,148,1020,28]}
+{"kind":"textbox","id":"sh/4vqd0ret","slide":7,"text":"Artifact Alley  |  07","textPreview":"Artifact Alley  |  07","textChars":21,"textLines":1,"bbox":[1070,666,150,22]}
+{"kind":"shape","id":"sh/pwzutwfe","slide":7,"bbox":[95,170,510,78]}
+{"kind":"textbox","id":"sh/2tovyhwn","slide":7,"text":"Language","textPreview":"Language","textChars":8,"textLines":1,"bbox":[123,193,175,28]}
+{"kind":"textbox","id":"sh/3uhcrmx8","slide":7,"text":"Java 21","textPreview":"Java 21","textChars":7,"textLines":1,"bbox":[305,191,265,30]}
+{"kind":"shape","id":"sh/kzmtonyp","slide":7,"bbox":[95,275,510,78]}
+{"kind":"textbox","id":"sh/50vuxsfu","slide":7,"text":"Framework","textPreview":"Framework","textChars":9,"textLines":1,"bbox":[123,298,175,28]}
+{"kind":"textbox","id":"sh/903ex03a","slide":7,"text":"Spring Boot 3.5","textPreview":"Spring Boot 3.5","textChars":15,"textLines":1,"bbox":[305,296,265,30]}
+{"kind":"shape","id":"sh/ozudovmp","slide":7,"bbox":[95,380,510,78]}
+{"kind":"textbox","id":"sh/nylcvql4","slide":7,"text":"Web layer","textPreview":"Web layer","textChars":9,"textLines":1,"bbox":[123,403,175,28]}
+{"kind":"textbox","id":"sh/mxcvm54j","slide":7,"text":"Spring MVC and JSP","textPreview":"Spring MVC and JSP","textChars":18,"textLines":1,"bbox":[305,401,265,30]}
+{"kind":"shape","id":"sh/xone1k36","slide":7,"bbox":[95,485,510,78]}
+{"kind":"textbox","id":"sh/wnedsfml","slide":7,"text":"Data access","textPreview":"Data access","textChars":11,"textLines":1,"bbox":[123,508,175,28]}
+{"kind":"textbox","id":"sh/bmlwzal0","slide":7,"text":"Spring Data JPA and JDBC","textPreview":"Spring Data JPA and JDBC","textChars":24,"textLines":1,"bbox":[305,506,265,30]}
+{"kind":"shape","id":"sh/a1cvq54v","slide":7,"bbox":[660,170,510,78]}
+{"kind":"textbox","id":"sh/lsne5k3i","slide":7,"text":"Database","textPreview":"Database","textChars":8,"textLines":1,"bbox":[688,193,175,28]}
+{"kind":"textbox","id":"sh/kredwfmx","slide":7,"text":"H2 locally; PostgreSQL in production","textPreview":"H2 locally; PostgreSQL in production","textChars":36,"textLines":1,"bbox":[870,191,265,30]}
+{"kind":"shape","id":"sh/476pony5","slide":7,"bbox":[660,275,510,78]}
+{"kind":"textbox","id":"sh/p8f6hsfq","slide":7,"text":"Build and packaging","textPreview":"Build and packaging","textChars":19,"textLines":1,"bbox":[688,298,175,28]}
+{"kind":"textbox","id":"sh/i5o7mdgz","slide":7,"text":"Maven and executable WAR","textPreview":"Maven and executable WAR","textChars":24,"textLines":1,"bbox":[870,296,265,30]}
+{"kind":"shape","id":"sh/36xofixk","slide":7,"bbox":[660,380,510,78]}
+{"kind":"textbox","id":"sh/cb6ps7yh","slide":7,"text":"Deployment","textPreview":"Deployment","textChars":10,"textLines":1,"bbox":[688,403,175,28]}
+{"kind":"textbox","id":"sh/dcz6lcfm","slide":7,"text":"Docker on Render","textPreview":"Docker on Render","textChars":16,"textLines":1,"bbox":[870,401,265,30]}
+{"kind":"notes","id":"nt/lewio7","slide":7,"text":""}
+{"kind":"slide","id":"sl/64yb14","slide":8,"title":"Expected completed experience","textShapes":9}
+{"kind":"shape","id":"sh/ils72tov","slide":8,"bbox":[0,0,1280,16]}
+{"kind":"textbox","id":"sh/5836donm","slide":8,"text":"Expected completed experience","textPreview":"Expected completed experience","textChars":29,"textLines":1,"bbox":[70,90,1040,60]}
+{"kind":"textbox","id":"sh/4nup4j61","slide":8,"text":"The target system creates a simple, auditable journey for each marketplace participant.","textPreview":"The target system creates a simple, auditable journey for each marketplace participant.","textChars":87,"textLines":1,"bbox":[72,148,1020,28]}
+{"kind":"textbox","id":"sh/vi1o7e5k","slide":8,"text":"Artifact Alley  |  08","textPreview":"Artifact Alley  |  08","textChars":21,"textLines":1,"bbox":[1070,666,150,22]}
+{"kind":"textbox","id":"sh/gjap0j6p","slide":8,"text":"Seller journey","textPreview":"Seller journey","textChars":14,"textLines":1,"bbox":[84,502,280,30]}
+{"kind":"textbox","id":"sh/7eho3u58","slide":8,"text":"Create account, submit artifact, await approval","textPreview":"Create account, submit artifact, await approval","textChars":47,"textLines":1,"bbox":[82,540,285,48]}
+{"kind":"textbox","id":"sh/6d8nu9on","slide":8,"text":"Bidder journey","textPreview":"Bidder journey","textChars":14,"textLines":1,"bbox":[886,502,270,30]}
+{"kind":"textbox","id":"sh/k7e1k3ed","slide":8,"text":"Browse live items, inspect details, place a valid bid","textPreview":"Browse live items, inspect details, place a valid bid","textChars":53,"textLines":1,"bbox":[882,540,285,48]}
+{"kind":"shape","id":"sh/l872t8vy","slide":8,"bbox":[397,258,488,165]}
+{"kind":"textbox","id":"sh/y5wjidw7","slide":8,"text":"Marketplace quality","textPreview":"Marketplace quality","textChars":19,"textLines":1,"bbox":[435,294,410,32]}
+{"kind":"textbox","id":"sh/z65krids","slide":8,"text":"Only approved items appear in the live catalogue.\nBidding rules reject invalid actions.","textPreview":"Only approved items appear in the live catalogue. | Bidding rules reject invalid actions.","textChars":87,"textLines":2,"bbox":[430,342,420,52]}
+{"kind":"image","id":"im/nypofm18","slide":8,"name":"","alt":"Seller illustration","bbox":[85,185,275,275]}
+{"kind":"image","id":"im/8zi58r2t","slide":8,"name":"","alt":"Bidding illustration","bbox":[885,185,275,275]}
+{"kind":"notes","id":"nt/64yb14","slide":8,"text":""}
+{"kind":"slide","id":"sl/klt9mq","slide":9,"title":"Expected outcome and future scope","textShapes":8}
+{"kind":"shape","id":"sh/gzixkjap","slide":9,"bbox":[0,0,1280,16]}
+{"kind":"textbox","id":"sh/vy9gre94","slide":9,"text":"Expected outcome and future scope","textPreview":"Expected outcome and future scope","textChars":33,"textLines":1,"bbox":[70,90,1040,60]}
+{"kind":"textbox","id":"sh/ux0fi9sj","slide":9,"text":"The project’s intended result is a structured auction workflow that can grow beyond the first release.","textPreview":"The project’s intended result is a structured auction workflow that can grow beyond the first release.","textChars":102,"textLines":1,"bbox":[72,148,1020,28]}
+{"kind":"textbox","id":"sh/twryp4ry","slide":9,"text":"Artifact Alley  |  09","textPreview":"Artifact Alley  |  09","textChars":21,"textLines":1,"bbox":[1070,666,150,22]}
+{"kind":"shape","id":"sh/8vixgjad","slide":9,"bbox":[80,176,500,360]}
+{"kind":"textbox","id":"sh/7u9gne9s","slide":9,"text":"Expected outcome","textPreview":"Expected outcome","textChars":16,"textLines":1,"bbox":[118,215,350,32]}
+{"kind":"textbox","id":"sh/6tgfe9sn","slide":9,"text":"A single web platform where:\n\n• bidders participate in live auctions\n• sellers submit artifacts through review\n• administrators control marketplace entry","textPreview":"A single web platform where: |  | • bidders participate in live auctions | • sellers submit artifacts through review | • administrators c...","textChars":153,"textLines":5,"bbox":[118,278,395,165]}
+{"kind":"shape","id":"sh/dsby18r2","slide":9,"bbox":[640,176,560,360]}
+{"kind":"textbox","id":"sh/sr2hs3ax","slide":9,"text":"Next planned capabilities","textPreview":"Next planned capabilities","textChars":25,"textLines":1,"bbox":[684,215,390,32]}
+{"kind":"textbox","id":"sh/mpg3a5wr","slide":9,"text":"• Artifact photos and richer catalogue information\n\n• Seller dashboard for submitted listings\n\n• Auction closing logic, winner notification, and payment integration","textPreview":"• Artifact photos and richer catalogue information |  | • Seller dashboard for submitted listings |  | • Auction closing logic, winner no...","textChars":164,"textLines":5,"bbox":[684,278,440,165]}
+{"kind":"textbox","id":"sh/nap43axc","slide":9,"text":"Future scope items are proposed, not presented as completed features.","textPreview":"Future scope items are proposed, not presented as completed features.","textChars":69,"textLines":1,"bbox":[246,586,790,26]}
+{"kind":"notes","id":"nt/klt9mq","slide":9,"text":""}
+{"kind":"slide","id":"sl/xm4jzv","slide":10,"title":"Artifact Alley","textShapes":4}
+{"kind":"shape","id":"sh/90vud4fq","slide":10,"bbox":[0,0,1280,720]}
+{"kind":"shape","id":"sh/mx4b29gz","slide":10,"bbox":[0,0,1280,12]}
+{"kind":"textbox","id":"sh/nydcbexk","slide":10,"text":"Artifact Alley","textPreview":"Artifact Alley","textChars":14,"textLines":1,"bbox":[96,165,800,62]}
+{"kind":"textbox","id":"sh/w36t8jy1","slide":10,"text":"A proposed online auction platform for artifacts and antiques","textPreview":"A proposed online auction platform for artifacts and antiques","textChars":61,"textLines":1,"bbox":[98,245,770,34]}
+{"kind":"shape","id":"sh/x4fuhofm","slide":10,"bbox":[98,354,520,4]}
+{"kind":"textbox","id":"sh/a14b69gb","slide":10,"text":"The finished project will combine secure role-based access, controlled artifact approval, and valid bidding rules in one Spring-powered web application.","textPreview":"The finished project will combine secure role-based access, controlled artifact approval, and valid bidding rules in one Spring-powered w...","textChars":152,"textLines":1,"bbox":[98,400,700,85]}
+{"kind":"textbox","id":"sh/b2dcfexg","slide":10,"text":"Thank you","textPreview":"Thank you","textChars":9,"textLines":1,"bbox":[98,561,230,38]}
+{"kind":"notes","id":"nt/xm4jzv","slide":10,"text":"Research-informed flow used for this presentation: problem, solution, objectives, architecture, technology, expected result, and future scope. Sources consulted: University of Washington CSE 403 demo guidance and final-year software project presentation examples."}

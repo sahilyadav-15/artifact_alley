@@ -61,6 +61,33 @@ The `prod` profile intentionally has no H2 settings and reads its PostgreSQL URL
 - Pending listings remain out of the public live catalogue.
 - The administrator can use **Pending approvals** to approve a listing, which changes it to `LIVE`.
 
-## Next feature
+## Bidding
 
-Add artifact photos and seller-facing management of submitted listings.
+Every live catalogue card links to `GET /artifacts/{id}`, which shows the current persisted price, closing time, minimum next bid, and newest-first bid history. Bidder names are masked in public history. Guests are directed to sign in; seller and administrator accounts can view auctions but cannot bid.
+
+Bid submission uses `POST /artifacts/{id}/bids`. The browser sends only the amount. The server obtains the bidder ID from the `signedInUser` session, then reloads both the bidder and artifact from the database. It verifies the bidder role, live status, closing time, listing ownership, and amount before saving anything. A successful POST redirects back to the details page, so refreshing the page does not repeat the bid.
+
+The minimum accepted amount is the current price plus one centralized increment. It defaults to ₹100.00:
+
+```properties
+artifactalley.auction.minimum-increment=${AUCTION_MINIMUM_INCREMENT:100.00}
+```
+
+The service locks the artifact row with JPA `PESSIMISTIC_WRITE` for the full bid transaction. The bid insert and current-price update commit atomically. If two requests submit against the same old price, the second request rechecks the price after acquiring the lock and is rejected when it no longer meets the new minimum. This strategy works with the local H2 database and PostgreSQL.
+
+### Manual bidding check
+
+1. Start the application with `mvn spring-boot:run` or run the packaged WAR with `java -jar target/artifact-alley-0.0.1-SNAPSHOT.war`.
+2. Register a bidder account or sign in with an existing bidder.
+3. Open a live catalogue card using **View auction**.
+4. Enter the displayed minimum next bid or a larger amount and submit it.
+5. Confirm the redirected page shows the new current price and the bid at the top of history.
+6. Submit an amount below the newly displayed minimum and confirm the page explains the rejection while the current price remains unchanged.
+
+Automated tests use a separate in-memory H2 database:
+
+```bash
+mvn clean test package
+```
+
+The suite covers bid rules, atomic failure behavior, controller redirects and validation, history order, and two simultaneous transactions competing for the same previous price.

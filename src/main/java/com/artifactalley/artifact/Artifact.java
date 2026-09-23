@@ -67,6 +67,10 @@ public class Artifact {
         status = ArtifactStatus.LIVE;
     }
 
+    public void updateCurrentPrice(BigDecimal amount) {
+        this.currentPrice = amount;
+    }
+
     public Long getId() { return id; }
     public String getTitle() { return title; }
     public Category getCategory() { return category; }

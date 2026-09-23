@@ -190,6 +190,49 @@ h3 {
   animation: toast-in 180ms ease-out;
 }
 
+.password-control { position: relative; }
+.password-control .form-control { padding-right: 4.25rem; }
+.password-toggle { position: absolute; top: 50%; right: .35rem; display: grid; width: 3.55rem; height: 2.35rem; place-items: center; padding: 0; border: 0; border-radius: .35rem; background: transparent; color: #6e625a; font-family: Arial, sans-serif; font-size: .78rem; font-weight: 700; transform: translateY(-50%); }
+.password-toggle:hover { background: #f1e6da; color: var(--clay); }
+.password-toggle:focus-visible { outline: 3px solid rgba(156, 79, 46, .55); outline-offset: 1px; }
+.password-toggle svg, .password-eye { display: none; }
+.password-toggle::after { content: "Show"; }
+.password-toggle.is-visible::after { content: "Hide"; }
+
+.logout-modal { position: fixed; z-index: 1050; inset: 0; display: grid; place-items: center; padding: 1.5rem; background: rgba(32, 26, 22, .38); backdrop-filter: blur(6px); }
+.logout-modal[hidden] { display: none; }
+.logout-dialog { width: min(100%, 25rem); padding: 1.75rem; border: 1px solid #e3d8ca; border-radius: .65rem; background: #fffdf9; box-shadow: 0 18px 48px rgba(32, 26, 22, .25); }
+.logout-dialog h2 { margin: 0 0 .5rem; font-size: 1.55rem; }
+.logout-dialog p { margin: 0; color: #5e554f; font-family: Arial, sans-serif; }
+.logout-actions { display: flex; justify-content: flex-end; gap: .65rem; margin-top: 1.5rem; }
+
+.artifact-detail-card,
+.bid-panel,
+.bid-history {
+  background: #fffdf9;
+  border: 1px solid #e3d8ca;
+  border-radius: .4rem;
+  box-shadow: 0 6px 22px rgba(32, 26, 22, .05);
+}
+
+.artifact-detail-card h1 { font-size: clamp(2rem, 5vw, 3.6rem); }
+.detail-description { white-space: pre-wrap; }
+.auction-state { color: var(--clay); font-family: Arial, sans-serif; font-size: .78rem; font-weight: 700; letter-spacing: .1em; }
+.auction-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin: 2rem 0 0; }
+.auction-facts div { padding-top: .75rem; border-top: 1px solid #e3d8ca; }
+.auction-facts dt { color: #6e625a; font-family: Arial, sans-serif; font-size: .78rem; font-weight: 400; }
+.auction-facts dd { margin: .2rem 0 0; font-size: 1.05rem; font-weight: 700; }
+.bid-panel { position: sticky; top: 1rem; }
+.bid-history { padding: 1.5rem; }
+.bid-history .table { margin-bottom: 0; --bs-table-bg: transparent; }
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible {
+  outline: 3px solid rgba(156, 79, 46, .55);
+  outline-offset: 2px;
+}
+
 @keyframes toast-in {
   from {
     opacity: 0;
@@ -206,6 +249,8 @@ h3 {
   .role-option {
     min-height: 7.5rem;
   }
+
+  .auction-facts { grid-template-columns: 1fr; }
 }
 
 @media (prefers-reduced-motion: reduce) {
