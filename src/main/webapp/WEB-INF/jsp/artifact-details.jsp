@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,7 +21,7 @@
                 <c:when test="${not empty sessionScope.signedInUser}">
                     <span class="navbar-text"><c:out value="${sessionScope.signedInUser.name}" />
                         <small>(<c:out value="${sessionScope.signedInUser.role}" />)</small></span>
-                    <c:if test="${sessionScope.signedInUser.role == 'BIDDER'}"><form action="/account/become-seller" method="post" class="m-0"><button class="btn btn-accent btn-sm" type="submit">Become a seller</button></form></c:if>
+                    <c:if test="${sessionScope.signedInUser.role == 'BIDDER'}"><a class="btn btn-outline-light btn-sm" href="/account/bids">My bids</a><form action="/account/become-seller" method="post" class="m-0"><button class="btn btn-accent btn-sm" type="submit">Become a seller</button></form></c:if>
                     <c:if test="${sessionScope.signedInUser.role == 'SELLER'}"><a class="btn btn-accent btn-sm" href="/seller/artifacts/new">Submit artifact</a></c:if>
                     <c:if test="${sessionScope.signedInUser.role == 'ADMIN'}"><a class="btn btn-accent btn-sm" href="/admin/artifacts/pending">Pending approvals</a></c:if>
                     <a class="btn btn-outline-light btn-sm" href="/account/password">Change password</a>
@@ -46,6 +47,7 @@
     <div class="row g-4">
         <div class="col-lg-7">
             <article class="artifact-detail-card p-4 p-md-5">
+                <div class="image-gallery mb-4"><c:choose><c:when test="${empty artifactImages}"><div class="artifact-placeholder" role="img" aria-label="No photo available for ${fn:escapeXml(details.artifact.title)}">No photo available</div></c:when><c:otherwise><c:forEach items="${artifactImages}" var="image"><figure><img src="${imageUrls[image.id]}" alt="${fn:escapeXml(details.artifact.title)}"><c:if test="${image.coverImage}"><figcaption>Cover photo</figcaption></c:if></figure></c:forEach></c:otherwise></c:choose></div>
                 <div class="d-flex flex-wrap justify-content-between gap-2 mb-3">
                     <span class="badge text-bg-light"><c:out value="${details.artifact.category}" /></span>
                     <span class="auction-state"><c:out value="${auctionState}" /></span>
@@ -53,23 +55,31 @@
                 <h1><c:out value="${details.artifact.title}" /></h1>
                 <p class="text-muted"><c:out value="${details.artifact.era}" /></p>
                 <p class="description detail-description"><c:out value="${details.artifact.description}" /></p>
+                <c:if test="${details.artifact.status == 'SOLD'}">
+                    <div class="auction-outcome" role="status">
+                        <strong>Auction ended — Sold</strong>
+                        <c:choose><c:when test="${signedInBidderWon}"><span>You won this auction.</span></c:when><c:otherwise><span>Winning bidder: <c:out value="${details.winnerDisplayName}" /></span></c:otherwise></c:choose>
+                    </div>
+                </c:if>
+                <c:if test="${details.artifact.status == 'CLOSED'}"><div class="auction-outcome" role="status"><strong>Auction closed</strong><span>No bids were placed.</span></div></c:if>
                 <dl class="auction-facts">
                     <div><dt>Starting price</dt><dd>₹ <c:out value="${details.artifact.startingPrice}" /></dd></div>
-                    <div><dt>Current price</dt><dd>₹ <c:out value="${details.artifact.currentPrice}" /></dd></div>
-                    <div><dt>Minimum next bid</dt><dd>₹ <c:out value="${details.minimumNextBid}" /></dd></div>
+                    <div><dt><c:choose><c:when test="${details.artifact.status == 'SOLD'}">Final price</c:when><c:otherwise>Current price</c:otherwise></c:choose></dt><dd>₹ <c:out value="${details.artifact.currentPrice}" /></dd></div>
+                    <c:if test="${auctionOpen}"><div><dt>Minimum next bid</dt><dd>₹ <c:out value="${details.minimumNextBid}" /></dd></div></c:if>
                     <div><dt>Closes</dt><dd><c:out value="${details.closesAtDisplay}" /></dd></div>
                     <div><dt>Auction state</dt><dd><c:out value="${auctionState}" /></dd></div>
                     <div><dt>Bid count</dt><dd><c:out value="${details.bidCount}" /></dd></div>
+                    <c:if test="${not empty details.settledAtDisplay}"><div><dt>Settled</dt><dd><c:out value="${details.settledAtDisplay}" /></dd></div></c:if>
                 </dl>
             </article>
         </div>
         <div class="col-lg-5">
             <section class="bid-panel p-4" aria-labelledby="bid-title">
                 <h2 id="bid-title">Place a bid</h2>
+                <c:if test="${not empty bidError}"><div class="alert alert-danger" role="alert"><c:out value="${bidError}" /></div></c:if>
                 <c:choose>
                     <c:when test="${canBid}">
                         <p class="description">Enter ₹<c:out value="${details.minimumNextBid}" /> or more. The latest price is checked again when you submit.</p>
-                        <c:if test="${not empty bidError}"><div class="alert alert-danger" role="alert"><c:out value="${bidError}" /></div></c:if>
                         <form:form method="post" action="/artifacts/${details.artifact.id}/bids" modelAttribute="bidForm" novalidate="true">
                             <form:label path="amount" cssClass="form-label">Your bid amount (₹)</form:label>
                             <form:input path="amount" type="number" cssClass="form-control" min="0.01" step="0.01" inputmode="decimal" />
@@ -77,7 +87,9 @@
                             <button class="btn btn-primary w-100 mt-3" type="submit">Place bid</button>
                         </form:form>
                     </c:when>
-                    <c:when test="${!auctionOpen}"><p class="description">Bidding is unavailable because this auction is closed or is not live.</p></c:when>
+                    <c:when test="${details.artifact.status == 'SOLD'}"><c:choose><c:when test="${signedInBidderWon}"><div class="winner-message" role="status">You won this auction.</div></c:when><c:otherwise><p class="description">This auction has ended.</p></c:otherwise></c:choose></c:when>
+                    <c:when test="${details.artifact.status == 'CLOSED'}"><p class="description">This auction closed without bids.</p></c:when>
+                    <c:when test="${!auctionOpen}"><p class="description">Bidding is unavailable because this auction is not live.</p></c:when>
                     <c:when test="${empty sessionScope.signedInUser}"><p class="description">Sign in with a bidder account to take part in this auction.</p><a class="btn btn-primary" href="/login">Sign in to bid</a></c:when>
                     <c:otherwise><p class="description">Seller and administrator accounts may view auctions but cannot place bids.</p></c:otherwise>
                 </c:choose>

@@ -8,6 +8,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -17,7 +21,22 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class ArtifactServiceTest {
     @Mock private ArtifactRepository artifactRepository;
+    @Mock private Clock clock;
     @InjectMocks private ArtifactService artifactService;
+
+    @Test
+    void liveCatalogueUsesServerClockAndExcludesExpiredRowsAtTheQuery() {
+        Instant instant = Instant.parse("2026-09-23T08:00:00Z");
+        when(clock.instant()).thenReturn(instant);
+        when(clock.getZone()).thenReturn(ZoneOffset.UTC);
+        when(artifactRepository.findByStatusAndClosesAtAfterOrderByClosesAtAsc(
+                ArtifactStatus.LIVE, LocalDateTime.ofInstant(instant, ZoneOffset.UTC))).thenReturn(List.of());
+
+        assertTrue(artifactService.findLiveArtifacts().isEmpty());
+
+        verify(artifactRepository).findByStatusAndClosesAtAfterOrderByClosesAtAsc(
+                ArtifactStatus.LIVE, LocalDateTime.ofInstant(instant, ZoneOffset.UTC));
+    }
 
     @Test
     void sellerSubmissionIsPendingAndDoesNotBecomeLiveUntilApproved() {

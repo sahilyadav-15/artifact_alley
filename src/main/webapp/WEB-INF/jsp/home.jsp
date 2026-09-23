@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
     <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+    <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
         <!DOCTYPE html>
         <html lang="en">
 
@@ -22,10 +23,12 @@
                                 <span class="navbar-text"><c:out value="${sessionScope.signedInUser.name}" />
                                     <small>(<c:out value="${sessionScope.signedInUser.role}" />)</small></span>
                                 <c:if test="${sessionScope.signedInUser.role == 'BIDDER'}">
+                                    <a class="btn btn-outline-light btn-sm" href="/account/bids">My bids</a>
                                     <form action="/account/become-seller" method="post" class="m-0"><button
                                             class="btn btn-accent btn-sm" type="submit">Become a seller</button></form>
                                 </c:if>
                                 <c:if test="${sessionScope.signedInUser.role == 'SELLER'}"><a
+                                        class="btn btn-outline-light btn-sm" href="/seller/artifacts">My artifacts</a><a
                                         class="btn btn-accent btn-sm" href="/seller/artifacts/new">Submit artifact</a>
                                 </c:if>
                                 <c:if test="${sessionScope.signedInUser.role == 'ADMIN'}"><a
@@ -79,6 +82,7 @@
                         <c:forEach items="${artifacts}" var="artifact">
                             <div class="col-md-6 col-lg-4">
                                 <article class="artifact-card h-100 p-4">
+                                    <c:choose><c:when test="${not empty coverImageUrls[artifact.id]}"><img class="artifact-cover mb-3" src="${coverImageUrls[artifact.id]}" alt="${fn:escapeXml(artifact.title)}"></c:when><c:otherwise><div class="artifact-placeholder mb-3" role="img" aria-label="No photo available for ${fn:escapeXml(artifact.title)}">No photo available</div></c:otherwise></c:choose>
                                     <span class="badge text-bg-light mb-3"><c:out value="${artifact.category}" /></span>
                                     <h3><c:out value="${artifact.title}" /></h3>
                                     <p class="text-muted mb-4"><c:out value="${artifact.era}" /></p>

@@ -3,18 +3,22 @@ package com.artifactalley.artifact;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.Clock;
 import java.util.List;
 
 @Service
 public class ArtifactService {
     private final ArtifactRepository artifactRepository;
+    private final Clock clock;
 
-    public ArtifactService(ArtifactRepository artifactRepository) {
+    public ArtifactService(ArtifactRepository artifactRepository, Clock clock) {
         this.artifactRepository = artifactRepository;
+        this.clock = clock;
     }
 
     public List<Artifact> findLiveArtifacts() {
-        return artifactRepository.findByStatusOrderByClosesAtAsc(ArtifactStatus.LIVE);
+        return artifactRepository.findByStatusAndClosesAtAfterOrderByClosesAtAsc(
+                ArtifactStatus.LIVE, LocalDateTime.now(clock));
     }
 
     public Artifact submit(String title, Category category, String era, BigDecimal startingPrice,

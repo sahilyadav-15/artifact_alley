@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.Clock;
 import java.util.List;
 
 @Service
@@ -20,10 +21,12 @@ public class BiddingService {
     private final UserRepository userRepository;
     private final BidRepository bidRepository;
     private final BigDecimal minimumIncrement;
+    private final Clock clock;
 
     public BiddingService(ArtifactRepository artifactRepository, UserRepository userRepository,
                           BidRepository bidRepository,
-                          @Value("${artifactalley.auction.minimum-increment:100.00}") BigDecimal minimumIncrement) {
+                          @Value("${artifactalley.auction.minimum-increment:100.00}") BigDecimal minimumIncrement,
+                          Clock clock) {
         if (minimumIncrement == null || minimumIncrement.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("The auction minimum increment must be greater than zero.");
         }
@@ -31,6 +34,7 @@ public class BiddingService {
         this.userRepository = userRepository;
         this.bidRepository = bidRepository;
         this.minimumIncrement = minimumIncrement;
+        this.clock = clock;
     }
 
     @Transactional
@@ -47,12 +51,13 @@ public class BiddingService {
             throw new BidNotAllowedException("This auction is not live, so it cannot accept bids.");
         }
 
-        LocalDateTime placedAt = LocalDateTime.now();
+        LocalDateTime placedAt = LocalDateTime.now(clock);
         if (!artifact.getClosesAt().isAfter(placedAt)) {
             throw new BidNotAllowedException("This auction has already closed.");
         }
-        if (artifact.getSubmittedByEmail() != null
-                && artifact.getSubmittedByEmail().equalsIgnoreCase(bidder.getEmail())) {
+        if ((artifact.getSeller() != null && artifact.getSeller().getId().equals(bidder.getId()))
+                || (artifact.getSeller() == null && artifact.getSubmittedByEmail() != null
+                && artifact.getSubmittedByEmail().equalsIgnoreCase(bidder.getEmail()))) {
             throw new BidNotAllowedException("You cannot bid on your own artifact.");
         }
 
@@ -74,7 +79,10 @@ public class BiddingService {
         List<BidHistoryItem> history = bidRepository.findByArtifactIdOrderByPlacedAtDescIdDesc(artifactId).stream()
                 .map(bid -> new BidHistoryItem(bid.getAmount(), bid.getPlacedAt(), maskName(bid.getBidder().getName())))
                 .toList();
-        return new AuctionDetails(artifact, minimumBidFor(artifact), history);
+        Bid winningBid = artifact.getWinningBid();
+        String winnerDisplayName = winningBid == null ? null : maskName(winningBid.getBidder().getName());
+        Long winningBidderId = winningBid == null ? null : winningBid.getBidder().getId();
+        return new AuctionDetails(artifact, minimumBidFor(artifact), history, winnerDisplayName, winningBidderId);
     }
 
     public BigDecimal minimumBidFor(Artifact artifact) {

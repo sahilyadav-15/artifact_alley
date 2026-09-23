@@ -55,11 +55,41 @@ Neon usually shows a URL beginning `postgresql://`; for `JDBC_DATABASE_URL`, cha
 
 The `prod` profile intentionally has no H2 settings and reads its PostgreSQL URL, user, and password only from the environment. JPA remains `ddl-auto=update` for this demo; use managed migrations before relying on it for a production application.
 
-## Seller submission and approval
+## Seller workspace, review and photos
 
-- Sellers can use **Submit artifact** to create a `PENDING_APPROVAL` listing.
-- Pending listings remain out of the public live catalogue.
-- The administrator can use **Pending approvals** to approve a listing, which changes it to `LIVE`.
+- Sellers use `/seller/artifacts` to see every listing they own, including pending, rejected, live, sold, closed and withdrawn submissions. Ownership is a persisted `User` relationship; legacy email-only rows are matched case-insensitively when possible and unmatched rows remain visible to administrators for resolution.
+- Pending and rejected listings may be edited. Editing a rejected listing does not publish or resubmit it; the seller must explicitly choose **Resubmit for review**. Live, sold, closed and withdrawn listings are read-only.
+- The administrator review queue is `/admin/artifacts/pending`. An administrator may approve a valid pending listing or reject it with a required reason of at most 500 characters. Sellers can read that escaped feedback, correct the listing and resubmit it.
+- Pending and rejected listings may be withdrawn. A live listing may be withdrawn only while it is open and has no accepted bids; the service locks and rechecks both conditions. Sold, closed and already-withdrawn listings cannot be withdrawn. Withdrawal never deletes bid history or the artifact row.
+
+The listing lifecycle is:
+
+```text
+PENDING_APPROVAL → LIVE → SOLD
+PENDING_APPROVAL → LIVE → CLOSED
+PENDING_APPROVAL → REJECTED → PENDING_APPROVAL
+PENDING_APPROVAL → WITHDRAWN
+LIVE (open, zero bids) → WITHDRAWN
+```
+
+Submissions and eligible drafts accept up to five JPEG or PNG images, each no larger than 5 MB. The server decodes and re-encodes every upload, generates a random storage key, and never uses the supplied filename as a path. Sellers can choose the cover, drag to reorder, and delete photos; deleting the cover chooses the first remaining photo automatically. Seeded and legacy artifacts without images render an accessible placeholder.
+
+Local image files default to `./uploads/artifacts`. Override this without changing code:
+
+```properties
+artifactalley.images.directory=${ARTIFACT_IMAGES_DIRECTORY:./uploads/artifacts}
+```
+
+This filesystem implementation is intended for local development. A Render service filesystem may be ephemeral, so images can disappear after a restart or redeploy. Before production use, implement the existing `ArtifactImageStorage` interface with persistent object storage and configure that implementation; this step intentionally does not add a cloud provider.
+
+### Manual seller and review check
+
+1. Register two seller accounts and one bidder account. Submit a listing with two valid images as Seller A and confirm it appears only in Seller A's **My artifacts** dashboard.
+2. Edit the pending listing and use a direct Seller B URL to confirm its details and photo actions are unavailable.
+3. Sign in as the administrator, open **Pending approvals**, reject the listing with a reason, then confirm Seller A sees the escaped reason.
+4. Edit the rejected listing, reorder/select its cover, resubmit it, approve it as the administrator, and confirm the public catalogue and details page show its cover/gallery.
+5. Withdraw a separate live listing with no bids. For another live listing, place a bidder bid first and confirm the seller's withdrawal is rejected while its bid history remains intact.
+6. Try an empty file, a file larger than 5 MB, renamed non-image content, and an unsupported type. Confirm each is rejected and no metadata or stored file remains.
 
 ## Bidding
 
@@ -91,3 +121,42 @@ mvn clean test package
 ```
 
 The suite covers bid rules, atomic failure behavior, controller redirects and validation, history order, and two simultaneous transactions competing for the same previous price.
+
+## Auction lifecycle and settlement
+
+Approved listings follow one of these persisted state paths:
+
+```text
+PENDING_APPROVAL → LIVE → SOLD
+PENDING_APPROVAL → LIVE → CLOSED
+```
+
+- `LIVE` means the closing time is still in the future and the auction may accept valid bidder submissions.
+- `SOLD` means the auction ended with at least one valid bid. The highest bid, its bidder, final price, and server settlement time are recorded. It does not mean payment has completed.
+- `CLOSED` means the auction ended without a bid. It has no winner and retains its original/current price.
+
+Settlement locks the artifact row with `PESSIMISTIC_WRITE`, selects the highest bid using amount descending, placement time ascending, and ID ascending, then saves the status, winning bid, final price, and settlement time atomically. Repeated calls return the existing outcome without changing its winner or timestamp. The same row lock coordinates settlement with bid placement, so a bid and settlement cannot both cross the authoritative closing boundary.
+
+The application uses one injectable `Clock`. Production uses the application server's default timezone so existing `LocalDateTime` database values retain their established meaning. All application instances should therefore use the same configured system timezone. Tests replace this clock with a fixed or mutable clock and do not wait for wall-clock time.
+
+A scheduler checks a bounded batch of expired `LIVE` auctions once per minute by default. Each artifact is settled in its own transaction, and one failure does not stop the rest of the batch:
+
+```properties
+artifactalley.auction.settlement-interval-ms=${AUCTION_SETTLEMENT_INTERVAL_MS:60000}
+artifactalley.auction.settlement-initial-delay-ms=${AUCTION_SETTLEMENT_INITIAL_DELAY_MS:60000}
+artifactalley.auction.settlement-batch-size=${AUCTION_SETTLEMENT_BATCH_SIZE:50}
+```
+
+Artifact details also request settlement before rendering, while the public catalogue queries only `LIVE` artifacts whose closing time is still in the future. Bidder accounts can open `/account/bids` through **My bids** to see active, won, and lost or ended auctions.
+
+### Manual lifecycle check
+
+1. Start the packaged WAR and register two bidder accounts in separate browser sessions.
+2. Open the same active artifact and place two increasing valid bids.
+3. In a disposable test profile, advance the injected clock beyond the artifact's closing time or wait for a naturally closing test auction.
+4. Open the artifact details page or run the settlement batch.
+5. Confirm the artifact is `SOLD`, the highest bidder sees **You won this auction**, the other bidder sees an ended outcome, and the final price matches the winning bid.
+6. Attempt another bid and confirm it is rejected.
+7. Run settlement again and confirm the winner, final price, and settlement timestamp remain unchanged.
+
+For a no-bid lifecycle check, close an expired `LIVE` test artifact without bids and confirm it becomes `CLOSED` with no winner.

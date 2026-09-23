@@ -2,6 +2,10 @@ package com.artifactalley.bid;
 
 import com.artifactalley.artifact.Artifact;
 import com.artifactalley.artifact.ArtifactStatus;
+import com.artifactalley.artifact.ArtifactImageService;
+import org.springframework.beans.factory.annotation.Autowired;
+import com.artifactalley.auction.AuctionNotExpiredException;
+import com.artifactalley.auction.AuctionSettlementService;
 import com.artifactalley.user.AuthController;
 import com.artifactalley.user.Role;
 import com.artifactalley.user.SessionUser;
@@ -18,13 +22,22 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
+import java.time.Clock;
 
 @Controller
 public class ArtifactAuctionController {
     private final BiddingService biddingService;
+    private final AuctionSettlementService settlementService;
+    private final Clock clock;
+    @Autowired(required = false)
+    private ArtifactImageService imageService;
 
-    public ArtifactAuctionController(BiddingService biddingService) {
+    public ArtifactAuctionController(BiddingService biddingService,
+                                     AuctionSettlementService settlementService,
+                                     Clock clock) {
         this.biddingService = biddingService;
+        this.settlementService = settlementService;
+        this.clock = clock;
     }
 
     @GetMapping("/artifacts/{id}")
@@ -69,14 +82,30 @@ public class ArtifactAuctionController {
     }
 
     private void populateDetails(Long id, Model model, HttpSession session) {
+        try {
+            settlementService.settleAuction(id);
+        } catch (AuctionNotExpiredException ignored) {
+            // Active auctions are expected to reach this branch.
+        }
         AuctionDetails details = biddingService.getAuctionDetails(id);
         Artifact artifact = details.getArtifact();
-        boolean open = artifact.getStatus() == ArtifactStatus.LIVE && artifact.getClosesAt().isAfter(LocalDateTime.now());
+        boolean open = artifact.getStatus() == ArtifactStatus.LIVE
+                && artifact.getClosesAt().isAfter(LocalDateTime.now(clock));
         SessionUser signedInUser = signedInUser(session);
         model.addAttribute("details", details);
         model.addAttribute("auctionOpen", open);
         model.addAttribute("canBid", open && signedInUser != null && signedInUser.getRole() == Role.BIDDER);
         model.addAttribute("auctionState", open ? "LIVE" : artifact.getStatus() == ArtifactStatus.LIVE ? "CLOSED" : artifact.getStatus());
+        model.addAttribute("signedInBidderWon", signedInUser != null
+                && signedInUser.getRole() == Role.BIDDER
+                && signedInUser.getId().equals(details.getWinningBidderId()));
+        if (imageService != null) {
+            var images = imageService.list(id);
+            java.util.Map<Long, String> urls = new java.util.LinkedHashMap<>();
+            images.forEach(image -> urls.put(image.getId(), imageService.url(image)));
+            model.addAttribute("artifactImages", images);
+            model.addAttribute("imageUrls", urls);
+        }
     }
 
     private SessionUser signedInUser(HttpSession session) {

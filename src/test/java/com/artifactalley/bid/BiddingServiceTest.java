@@ -15,6 +15,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +27,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class BiddingServiceTest {
+    private static final Clock CLOCK = Clock.fixed(Instant.parse("2026-09-23T02:30:00Z"), ZoneId.of("Asia/Kolkata"));
     @Mock private ArtifactRepository artifactRepository;
     @Mock private UserRepository userRepository;
     @Mock private BidRepository bidRepository;
@@ -33,8 +37,8 @@ class BiddingServiceTest {
 
     @BeforeEach
     void setUp() {
-        biddingService = new BiddingService(artifactRepository, userRepository, bidRepository, new BigDecimal("100.00"));
-        liveArtifact = artifact(ArtifactStatus.LIVE, LocalDateTime.now().plusHours(2), "seller@example.com");
+        biddingService = new BiddingService(artifactRepository, userRepository, bidRepository, new BigDecimal("100.00"), CLOCK);
+        liveArtifact = artifact(ArtifactStatus.LIVE, LocalDateTime.now(CLOCK).plusHours(2), "seller@example.com");
         bidder = user(Role.BIDDER, "bidder@example.com");
         lenient().when(artifactRepository.findByIdForUpdate(1L)).thenReturn(Optional.of(liveArtifact));
         lenient().when(userRepository.findById(2L)).thenReturn(Optional.of(bidder));
@@ -43,14 +47,14 @@ class BiddingServiceTest {
 
     @Test
     void successfulBidStoresAuthenticatedBidderTimestampAndUpdatesCurrentPrice() {
-        LocalDateTime before = LocalDateTime.now();
+        LocalDateTime before = LocalDateTime.now(CLOCK);
         Bid bid = biddingService.placeBid(1L, 2L, new BigDecimal("1200.00"));
 
         assertSame(bidder, bid.getBidder());
         assertSame(liveArtifact, bid.getArtifact());
         assertEquals(new BigDecimal("1200.00"), bid.getAmount());
         assertFalse(bid.getPlacedAt().isBefore(before));
-        assertFalse(bid.getPlacedAt().isAfter(LocalDateTime.now()));
+        assertEquals(before, bid.getPlacedAt());
         assertEquals(new BigDecimal("1200.00"), liveArtifact.getCurrentPrice());
         verify(bidRepository).save(bid);
         verify(artifactRepository).save(liveArtifact);
@@ -74,7 +78,7 @@ class BiddingServiceTest {
 
     @Test
     void closedAuctionIsRejected() {
-        liveArtifact = artifact(ArtifactStatus.LIVE, LocalDateTime.now().minusSeconds(1), "seller@example.com");
+        liveArtifact = artifact(ArtifactStatus.LIVE, LocalDateTime.now(CLOCK).minusSeconds(1), "seller@example.com");
         when(artifactRepository.findByIdForUpdate(1L)).thenReturn(Optional.of(liveArtifact));
         BiddingException exception = assertThrows(BidNotAllowedException.class,
                 () -> biddingService.placeBid(1L, 2L, new BigDecimal("1100.00")));
@@ -85,7 +89,7 @@ class BiddingServiceTest {
     @Test
     void everyNonLiveStatusIsRejected() {
         for (ArtifactStatus status : List.of(ArtifactStatus.PENDING_APPROVAL, ArtifactStatus.SOLD, ArtifactStatus.CLOSED)) {
-            liveArtifact = artifact(status, LocalDateTime.now().plusHours(2), "seller@example.com");
+            liveArtifact = artifact(status, LocalDateTime.now(CLOCK).plusHours(2), "seller@example.com");
             when(artifactRepository.findByIdForUpdate(1L)).thenReturn(Optional.of(liveArtifact));
             assertThrows(BidNotAllowedException.class,
                     () -> biddingService.placeBid(1L, 2L, new BigDecimal("1100.00")));

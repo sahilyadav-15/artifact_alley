@@ -7,6 +7,7 @@ import com.artifactalley.user.AuthController;
 import com.artifactalley.user.Role;
 import com.artifactalley.user.SessionUser;
 import com.artifactalley.user.User;
+import com.artifactalley.auction.AuctionSettlementService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,9 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.List;
 
 import static org.mockito.Mockito.verify;
@@ -29,11 +33,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class ArtifactAuctionControllerTest {
     @Autowired private MockMvc mockMvc;
     @MockitoBean private BiddingService biddingService;
+    @MockitoBean private AuctionSettlementService settlementService;
+    @MockitoBean private Clock clock;
     private AuctionDetails details;
     private SessionUser bidderSession;
 
     @BeforeEach
     void setUp() {
+        when(clock.instant()).thenReturn(Instant.parse("2026-09-23T02:30:00Z"));
+        when(clock.getZone()).thenReturn(ZoneId.of("Asia/Kolkata"));
         Artifact artifact = new Artifact("Test", Category.OTHER, "1900", new BigDecimal("1000.00"),
                 LocalDateTime.now().plusHours(1), "Description", "seller@example.com", ArtifactStatus.LIVE);
         ReflectionTestUtils.setField(artifact, "id", 1L);
@@ -87,5 +95,31 @@ class ArtifactAuctionControllerTest {
                 .andExpect(status().isNotFound())
                 .andExpect(view().name("not-found"))
                 .andExpect(model().attribute("errorMessage", "That artifact could not be found."));
+    }
+
+    @Test
+    void settledWinnerSeesPrivateWinningStateAndLoserDoesNot() throws Exception {
+        Artifact sold = new Artifact("Sold lot", Category.OTHER, "1900", new BigDecimal("1000.00"),
+                LocalDateTime.now().minusMinutes(1), "Description", "seller@example.com", ArtifactStatus.LIVE);
+        ReflectionTestUtils.setField(sold, "id", 2L);
+        User winner = new User("Winner", "winner@example.com", "hash", Role.BIDDER);
+        ReflectionTestUtils.setField(winner, "id", 7L);
+        Bid winningBid = new Bid(sold, winner, new BigDecimal("1200.00"), LocalDateTime.now().minusMinutes(2));
+        ReflectionTestUtils.setField(winningBid, "id", 20L);
+        sold.settleSold(winningBid, LocalDateTime.now());
+        AuctionDetails soldDetails = new AuctionDetails(sold, new BigDecimal("1300.00"), List.of(), "W***", 7L);
+        when(biddingService.getAuctionDetails(2L)).thenReturn(soldDetails);
+
+        mockMvc.perform(get("/artifacts/2").sessionAttr(AuthController.SIGNED_IN_USER, bidderSession))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("auctionState", ArtifactStatus.SOLD))
+                .andExpect(model().attribute("signedInBidderWon", true));
+        verify(settlementService).settleAuction(2L);
+
+        User loser = new User("Loser", "loser@example.com", "hash", Role.BIDDER);
+        ReflectionTestUtils.setField(loser, "id", 8L);
+        mockMvc.perform(get("/artifacts/2").sessionAttr(AuthController.SIGNED_IN_USER, SessionUser.from(loser)))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("signedInBidderWon", false));
     }
 }

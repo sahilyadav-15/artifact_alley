@@ -23,7 +23,7 @@
                         <h1>Submit an artifact</h1>
                         <p class="text-muted">Your listing remains private until an administrator approves it.</p>
                         <form:form method="post" action="/seller/artifacts" modelAttribute="artifactSubmissionForm"
-                            class="mt-4" novalidate="true">
+                            class="mt-4" novalidate="true" enctype="multipart/form-data">
                             <form:errors path="*" cssClass="alert alert-danger d-block" element="div" />
                             <div class="mb-3">
                                 <form:label path="title" cssClass="form-label">Title</form:label>
@@ -62,7 +62,13 @@
                                 <form:textarea path="description" cssClass="form-control" rows="5" maxlength="1000" />
                                 <form:errors path="description" cssClass="invalid-feedback d-block" />
                             </div>
+                            <div class="mb-4">
+                                <label class="form-label" for="images">Photos <span class="text-muted">(optional, up to 5)</span></label>
+                                <input class="form-control" id="images" name="images" type="file" accept="image/jpeg,image/png" multiple>
+                                <div class="form-text">JPEG or PNG, maximum 5 MB per image. You can manage cover and order after submission.</div>
+                            </div>
                             <button class="btn btn-primary w-100" type="submit">Submit for approval</button>
+                            <a class="btn btn-link w-100 mt-2" href="/seller/artifacts">Back to My artifacts</a>
                         </form:form>
                     </div>
                 </main>
